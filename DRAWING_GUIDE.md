@@ -44,16 +44,16 @@ Grey text in the PDF (view names, scale notes, small notes) is written in black 
 3. **Pods**: six small numbered hexagons. **1** on the left upper arm and **2** on the right upper arm (sleeves). **3** and **4** at the vest's top corners (shoulders).
    **5** and **6** at the vest's bottom corners (torso). Bottom-left key in two lines at (2, 34): "pods: 1 L sleeve · 2 R sleeve · 3 L shoulder / 4 R shoulder · 5 L torso · 6 R torso".
 4. **Gloves**: one small square at each hand. "L glove · 4 flex + IMU" on the left, "R glove · 4 FSR" on the right.
-5. **Hub and Pi** (black): hub box 6 × 4 cm at (33.5, 18) labelled "hub XIAO", joined by a short thick USB cable to the Pi box 15 × 10 cm at (43, 15) labelled "Raspberry Pi 5 · ROS 2 nodes".
+5. **Pi 5 + hub + power bank on the vest**: on the vest, between the pods, a small black box "Pi", a small <span class="b">blue hub</span> beside it, and below them a <span class="r">red hatched power bank</span> with a short red cable up to the Pi.
+   **Zoom box** (dashed frame 30 × 12.8 cm at (30, 13.4)), joined to the vest's Pi by a dashed line. Inside, top-left: "ON THE VEST (zoom)". Then <span class="b">hub XIAO box</span> (5.6 × 3.4 cm),
+   a thick USB cable labelled "USB 921 600", and the Pi box (15 × 5.8 cm) "Raspberry Pi 5 · ROS 2 nodes". Under the Pi, a <span class="r">red box "USB-C power bank 5 V 5 A"</span> with a red cable up to the Pi.
 6. **Robots** (black): three boxes 7.6 × 4.6 cm with two wheels each, at (64, 19), (72.5, 19) and (81, 19), labelled ROSbot r1, r2, r3.
    OptiTrack: three small camera boxes at (74.5, 7), with "OptiTrack cameras" above them.
 7. **Desk dock** (black, with green hexagons): a sloped bar 17 cm long at (30, 31.6) with six small green hexagons. Caption above: "desk dock: 6 pockets · pods snap in by magnet".
 8. **Blue (dashed arrows):**
-   - from each glove to the hub, with "gloves: BLE 50 Hz / L 48 B · R 9 B" under the hub;
-   - from the hub to the vest, with "BLE to each pod: motor level / ≤ 20 Hz on change + 10 Hz keepalive · 2 B" at (21, 9);
-   - "BLE central (8 links)" above the hub;
-   - under the Pi: "USB serial 921 600 baud / ↑ hermes.hub.v1 JSON lines / ↓ V1,<seq>,m1..m6 @ 20 Hz";
-   - a double arrow from the Pi to the robots, with "ROS 2 over Wi-Fi / /hermes/swarm_intent 10 Hz → / ← /hermes/robot_state_beacon" at (59, 10);
+   - from each glove to the hub on the vest, and from the hub to a sleeve pod. Text at (21, 9): "BLE to the hub on the vest: / gloves 50 Hz · L 48 B · R 9 B / pods ≤ 20 Hz on change + 10 Hz keepalive · 2 B";
+   - in the zoom box: "BLE central (8 links)" under the hub, and "↑ hermes.hub.v1 JSON lines / ↓ V1,<seq>,m1..m6 @ 20 Hz" at its lower left;
+   - a double arrow from the zoomed Pi to the robots, with "ROS 2 over Wi-Fi / /hermes/swarm_intent 10 Hz → / ← /hermes/robot_state_beacon" at (59, 10);
    - from the cameras down to the robots: "NatNet poses → pose beacons". Under the robots: "each robot: own agent node → /cmd_vel 20 Hz".
 9. **Red:** an arrow into the dock's right end: "USB-C 5 V".
 10. **Status** (black), bottom right from (59, 30): "BUILT: ROS 2 nodes · ROSbots · OptiTrack · v1 glove carrier boards" ·
@@ -152,12 +152,12 @@ Views are third-angle: TOP above FRONT, SIDE to the right of FRONT.
 
 ## Panel D5: Hub + Pi 5 (top-left (140, 37), 30 × 24 cm), medium
 
-1. **WHERE** (left, from (1.4, 5.8)): a small stick operator wearing the vest, with the **Pi 5 + hub sitting on the vest** (black box + small blue hub), a glove on each hand and a pod on each sleeve.
+1. **WHERE** (left, from (1.4, 5.8)): a small stick operator wearing the vest, with the **Pi 5 + hub + power bank on the vest** (black box, small blue hub, small red bank below them), a glove on each hand and a pod on each sleeve.
    <span class="b">Blue dashed BLE arrows from both gloves and a sleeve pod to the hub</span>; a <span class="b">blue dashed Wi-Fi arrow from the Pi to a small ROSbot</span>;
-   a <span class="r">red cable from the Pi to a wall socket: "USB-C wall supply"</span>. Notes: "Pi 5 + hub sit on the vest", "BLE: gloves + pods → hub".
+   a <span class="r">red leader from the bank: "bank 5 V 5 A"</span>. Notes: "Pi 5 + hub + USB-C power bank on the vest", "BLE: gloves + pods → hub".
 2. **Pi 5 outline 1:1** at (15, 6.2), 8.5 × 5.6 cm. Dimensions 85 and 56. Draw only the ports that matter:
    two USB-A pairs and Ethernet on the right short edge, and <span class="r">USB-C power on the bottom edge, near the left</span>.
-   Notes: <span class="r">"USB-C power in (wall supply)"</span> and "Ethernet unused (Wi-Fi)".
+   Notes: <span class="r">"USB-C power in (power bank)"</span> and "Ethernet unused (Wi-Fi)".
 3. <span class="b">Hub XIAO 2:1</span> (4.2 × 3.6 cm) at (19.6, 16), with its USB-C on the right end. A thick black USB cable runs from the Pi's top USB-A port down to it.
    Note: "hub 21 × 17.8".
 4. **RUNS HERE** (bottom left, from (1.4, 17.6)): <span class="b">"hub XIAO: hub firmware (BLE central, 8 links → JSON over USB)"</span> and
@@ -264,7 +264,7 @@ Footnotes on the board: <span class="g">magnets: 6 pod + 6 dock + 6 vest = 18</s
 | Glove layout: box on the back of the hand, battery on the wrist strap with a 2-wire tether, hand 80 × 75 | `H.E.R.M.E.S Project/docs/superpowers/specs/2026-09-30-glove-pcb-design.md` |
 | Carrier board outline, J1–J5, dividers, XIAO position | `hardware/pcb/glove_carrier/glove_carrier.kicad_pcb`, `DESIGN_TOUR.md`, `BOM.md` |
 | Flex sensors in splints along the fingers; FSRs at the fingertips, one per finger, with the thumb as the contact | HERMES paper `Paper_New_HERMES/.../main.tex` (glove section, l. 110: "four FSR sensors (h--k), one per finger, with the thumb acting as the active contact point"; four flex sensors on the left glove) and the glove photo `H.E.R.M.E.S Project/docs/talk/img/gloves.jpg` |
-| Pi 5 + hub on the vest; Pi powered by a USB-C wall supply; Pi 5 85 × 56 | confirmed by the user |
+| Pi 5 + hub on the vest; Pi powered by a USB-C power bank 5 V 5 A; Pi 5 85 × 56 | confirmed by the user |
 | Dock underside: pin boards, M2 screws, USB board + ledge | `haptic-vest/src/cad_dock.py` slots, `deskbar2.py` (`SCREW_V`, `USB_BOARDS`, `LEDGE_*`, `WALL_IN`) |
 | Glove pin map, IMU on/off | `haptic-vest/firmware/glove_left`, `glove_right` |
 | ROS nodes, topics, rates | `H.E.R.M.E.S Project/ros_version/src/hermes_control/hermes_control/*_node.py` parameter defaults |

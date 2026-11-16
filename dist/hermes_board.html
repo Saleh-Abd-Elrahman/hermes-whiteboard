@@ -195,7 +195,7 @@ function panelA() {
   path([[ox - 45, oy + 56], [ox - 85, oy + 112], [ox - 100, oy + 150]]);          // left arm (wearer's left)
   path([[ox + 45, oy + 56], [ox + 85, oy + 112], [ox + 100, oy + 150]]);          // right arm
   rect(ox - 45, oy + 50, 90, 110);                                     // vest
-  text(ox, oy + 112, 'vest', 12, 'k', 'middle');
+  text(ox, oy + 66, 'vest', 11, 'k', 'middle');
   // 1/2 sleeves (on the upper arms), 3/4 shoulders, 5/6 torso
   const pods = [[-68, 86, 1], [68, 86, 2], [-26, 66, 3], [26, 66, 4], [-24, 138, 5], [24, 138, 6]];
   for (const [dx, dy, n] of pods) { poly(hex(ox + dx, oy + dy, 10), 'k'); text(ox + dx, oy + dy + 4, n, 11, 'k', 'middle'); }
@@ -205,22 +205,35 @@ function panelA() {
   text(ox + 82, oy + 205, '4 FSR', 11, 'k', 'start');
   text(X + 20, Y + 340, 'pods: 1 L sleeve · 2 R sleeve · 3 L shoulder\n4 R shoulder · 5 L torso · 6 R torso', 11);
 
-  // hub + Pi
-  const px = X + 430, py = Y + 150;
-  box(px, py, 150, 100, 'Raspberry Pi 5\nROS 2 nodes', 'k', 14);
-  box(px - 95, py + 30, 60, 40, 'hub\nXIAO', 'k', 12);
-  line(px - 35, py + 50, px, py + 50, 'k', { strokeWidth: 2.5 });
-  text(px + 40, py + 112, 'USB serial 921 600 baud', 11, 'b');
-  text(px + 40, py + 126, '↑ hermes.hub.v1 JSON lines', 11, 'b');
-  text(px + 40, py + 140, '↓ V1,<seq>,m1..m6 @ 20 Hz', 11, 'b');
-  text(px - 95, py + 22, 'BLE central (8 links)', 11, 'b');
+  // Pi 5 + hub + power bank ride on the vest
+  rect(ox - 30, oy + 80, 34, 22, 'k'); text(ox - 13, oy + 95, 'Pi', 10, 'k', 'middle');
+  rect(ox + 8, oy + 84, 13, 13, 'b');
+  rect(ox - 20, oy + 112, 40, 12, 'r', fillOf('r'));
+  line(ox - 13, oy + 102, ox - 13, oy + 112, 'r');
+  // BLE to the hub on the vest
+  arrow(ox - 108, oy + 145, ox + 8, oy + 96, 'b', dash);
+  arrow(ox + 108, oy + 145, ox + 21, oy + 96, 'b', dash);
+  arrow(ox + 21, oy + 88, ox + 58, oy + 86, 'b', dash);
+  text(X + 210, Y + 92, 'BLE to the hub on the vest:', 12, 'b');
+  text(X + 210, Y + 106, 'gloves 50 Hz · L 48 B · R 9 B', 12, 'b');
+  text(X + 210, Y + 120, 'pods ≤ 20 Hz on change + 10 Hz keepalive · 2 B', 12, 'b');
 
-  // BLE links
-  arrow(ox - 94, oy + 150, px - 95, py + 55, 'b', dash);
-  arrow(ox + 122, oy + 150, px - 95, py + 62, 'b', dash);
-  text(X + 290, Y + 270, 'gloves: BLE 50 Hz\nL 48 B · R 9 B', 12, 'b');
-  arrow(px - 95, py + 38, ox + 50, oy + 72, 'b', dash);
-  text(X + 210, Y + 92, 'BLE to each pod: motor level\n≤ 20 Hz on change + 10 Hz keepalive · 2 B', 12, 'b');
+  // zoom: what sits on the vest
+  const zx = X + 300, zy = Y + 134;
+  rect(zx, zy, 300, 128, 'k', Object.assign({ strokeWidth: 1 }, dash));
+  line(ox + 4, oy + 90, zx, zy + 60, 'k', Object.assign({ strokeWidth: 0.8 }, dash));
+  text(zx + 8, zy + 16, 'ON THE VEST (zoom)', 11, 'grey');
+  box(zx + 10, zy + 28, 56, 34, 'hub\nXIAO', 'b', 12);
+  text(zx + 10, zy + 76, 'BLE central (8 links)', 10.5, 'b');
+  line(zx + 66, zy + 45, zx + 140, zy + 45, 'k', { strokeWidth: 2.5 });
+  text(zx + 72, zy + 39, 'USB 921 600', 10, 'b');
+  box(zx + 140, zy + 20, 150, 58, 'Raspberry Pi 5\nROS 2 nodes', 'k', 13);
+  rect(zx + 140, zy + 96, 150, 20, 'r');
+  text(zx + 215, zy + 110, 'USB-C power bank 5 V 5 A', 10.5, 'r', 'middle');
+  line(zx + 215, zy + 78, zx + 215, zy + 96, 'r', { strokeWidth: 2 });
+  text(zx + 10, zy + 98, '↑ hermes.hub.v1 JSON lines', 10, 'b');
+  text(zx + 10, zy + 112, '↓ V1,<seq>,m1..m6 @ 20 Hz', 10, 'b');
+  const px = zx + 140, py = zy + 20;
 
   // dock + charging
   const dx = X + 300, dy = Y + 316;
@@ -233,8 +246,8 @@ function panelA() {
   // ROS 2 over Wi-Fi to robots
   const rx = X + 640, ry = Y + 190;
   arrow(px + 150, py + 30, rx - 8, ry + 20, 'b', dash, true);
-  text(px + 160, Y + 104, 'ROS 2 over Wi-Fi', 13, 'b');
-  text(px + 160, Y + 122, '/hermes/swarm_intent 10 Hz →\n← /hermes/robot_state_beacon', 11, 'b');
+  text(X + 610, Y + 104, 'ROS 2 over Wi-Fi', 13, 'b');
+  text(X + 610, Y + 122, '/hermes/swarm_intent 10 Hz →\n← /hermes/robot_state_beacon', 11, 'b');
   for (let i = 0; i < 3; i++) {
     const bx = rx + i * 85;
     rect(bx, ry, 76, 46); circ(bx + 15, ry + 52, 15); circ(bx + 61, ry + 52, 15);
@@ -631,7 +644,7 @@ function panelD4() {
 // ================================================================= D5. hub + Pi
 function panelD5() {
   const [X, Y] = at('D5', 0, 0);
-  // placement: Pi 5 + hub ride on the vest; Pi powered from a USB-C wall supply
+  // placement: Pi 5 + hub + USB-C power bank ride on the vest
   text(X + 14, Y + 58, 'WHERE', 10.5, 'grey');
   const ox = X + 46, oy = Y + 70;
   circ(ox, oy, 18);                                                          // head
@@ -649,12 +662,12 @@ function panelD5() {
   arrow(ox + 2, oy + 16, rbx - 3, rby + 6, 'b', dash);
   text(rbx + 11, rby + 32, 'ROSbots', 9, 'k', 'middle');
   text(X + 66, Y + 74, 'Wi-Fi', 9, 'b');
-  const wx = X + 86, wy = Y + 126;                                          // wall socket
-  rect(wx, wy, 12, 14, 'r'); line(wx + 4, wy + 4, wx + 4, wy + 8, 'r'); line(wx + 8, wy + 4, wx + 8, wy + 8, 'r');
-  path([[ox - 4, oy + 29], [ox - 4, oy + 56], [wx - 2, wy + 7]], 'r');
-  text(X + 14, Y + 152, 'Pi 5 + hub sit on the vest', 9.5, 'k');
+  rect(ox - 11, oy + 34, 20, 9, 'r', fillOf('r'));                         // power bank on the vest
+  line(ox - 4, oy + 29, ox - 4, oy + 34, 'r');
+  line(ox + 9, oy + 39, X + 84, Y + 131, 'r', { strokeWidth: 0.8 });
+  text(X + 14, Y + 152, 'Pi 5 + hub + USB-C power bank on the vest', 9.5, 'k');
   text(X + 14, Y + 163, 'BLE: gloves + pods → hub', 9.5, 'b');
-  text(wx + 16, wy + 6, 'USB-C wall\nsupply', 9, 'r');
+  text(X + 86, Y + 138, 'bank 5 V 5 A', 9, 'r');
 
   // Pi 5 outline 85 x 56 at 1.1:1, only the ports that matter
   const s = 1.0, px = X + 150, py = Y + 62, W = 85 * s, H = 56 * s;
@@ -663,7 +676,7 @@ function panelD5() {
   for (let i = 0; i < 2; i++) rect(px + W - 4, py + 6 + i * 16, 10, 13, 'k');      // USB-A pairs
   rect(px + W - 4, py + H - 18, 10, 14, 'k');                                       // Ethernet
   rect(px + 6, py + H - 4, 10, 6, 'r');                                              // USB-C power
-  text(px, py + H + 14, 'USB-C power in (wall supply)', 9, 'r');
+  text(px, py + H + 14, 'USB-C power in (power bank)', 9, 'r');
   text(px, py + H + 26, 'Ethernet unused (Wi-Fi)', 9, 'k');
   // hub on a USB-A port, 2:1
   const hx = X + 196, hy = Y + 160, hs = 2;
