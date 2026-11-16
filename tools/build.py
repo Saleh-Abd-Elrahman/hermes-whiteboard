@@ -20,8 +20,8 @@ geom = (ROOT / 'build/geometry.js').read_text()
 board = (ROOT / 'src/board.js').read_text()
 
 PAGES = {   # file: (mode, @page size, title)
-    'hermes_board.html': ('board', '600mm 850mm', 'HERMES whiteboard'),
-    'board_map.html': ('map', '400mm 566.7mm', 'HERMES board map'),
+    'hermes_board.html': ('board', '850mm 600mm', 'HERMES whiteboard'),
+    'board_map.html': ('map', '566.7mm 400mm', 'HERMES board map'),
     'board_panels.html': ('panels', '297mm 210mm', 'HERMES board panels'),
 }
 CSS = """
@@ -75,7 +75,7 @@ for src, pdf in (('hermes_board.html', 'hermes_board.pdf'), ('board_map.html', '
                  ('board_panels.html', 'board_panels.pdf'), ('drawing_guide.html', 'DRAWING_GUIDE.pdf')):
     chrome(f'--print-to-pdf={DIST / pdf}', (DIST / src).as_uri())
     print('wrote', pdf)
-# PNG previews for checking by eye (board is 1200 x 1700 units -> 2400 x 3400 px)
-chrome('--window-size=2268,3213', f'--screenshot={DIST / "hermes_board.png"}', (DIST / 'hermes_board.html').as_uri())
-chrome('--window-size=1512,2142', f'--screenshot={DIST / "board_map.png"}', (DIST / 'board_map.html').as_uri())
+# PNG previews for checking by eye (board is 1700 x 1200 units; 850 x 600 mm at 96 dpi)
+chrome('--window-size=3213,2268', f'--screenshot={DIST / "hermes_board.png"}', (DIST / 'hermes_board.html').as_uri())
+chrome('--window-size=2142,1512', f'--screenshot={DIST / "board_map.png"}', (DIST / 'board_map.html').as_uri())
 print('wrote previews')

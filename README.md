@@ -1,7 +1,7 @@
 # H.E.R.M.E.S whiteboard
 
 A hand-copyable whiteboard write-up of the latest H.E.R.M.E.S system: the wireless pod vest, the desk dock, XIAO nRF52840 BLE gloves and hub,
-and the ROS 2 side unchanged. It is laid out for a **120 × 170 cm portrait** whiteboard.
+and the ROS 2 side unchanged. It is laid out for a **170 × 120 cm landscape** whiteboard.
 
 ## Open these
 
@@ -10,6 +10,7 @@ and the ROS 2 side unchanged. It is laid out for a **120 × 170 cm portrait** wh
 | `dist/hermes_board.html` / `.pdf` | the digital whiteboard (hand-drawn style, offline, 1:2 scale PDF) |
 | `dist/board_map.html` / `.pdf` | the board map: panels to scale, sizes and positions in cm, drawing order |
 | `dist/board_panels.pdf` | one page per panel, to hold while drawing |
+| `sources/current_mapping_fix-gesture-bugs.md` | the current gesture table, generated from the fix/gesture-bugs branch (panel G) |
 | `DRAWING_GUIDE.md` / `dist/DRAWING_GUIDE.pdf` | panel by panel, what to draw in which order and colour; sources and the [VERIFY] list |
 
 Marker code: black = structure · blue = data / radio · red = power · green = magnets / mechanical.

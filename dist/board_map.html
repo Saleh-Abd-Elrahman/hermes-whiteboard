@@ -7,7 +7,7 @@ html, body { margin: 0; background: #fff; }
 svg { font-family: 'Patrick Hand', 'Comic Sans MS', cursive; display: block; }
 body.board svg, body.map svg { max-width: 100%; height: auto; }
 .page { width: 297mm; height: 210mm; display: flex; align-items: center; justify-content: center; page-break-after: always; }
-@page { size: 400mm 566.7mm; margin: 0; }
+@page { size: 566.7mm 400mm; margin: 0; }
 </style></head>
 <body><div id="root"></div>
 <script>window.MODE = 'map';</script>
@@ -20,23 +20,23 @@ body.board svg, body.map svg { max-width: 100%; height: auto; }
 /* global rough, GEOM */
 'use strict';
 
-const BOARD = { w: 1200, h: 1700 };
+const BOARD = { w: 1700, h: 1200 };
 const INK = { k: '#1e1e1e', b: '#1864ab', r: '#c92a2a', g: '#2b8a3e', grey: '#9aa0a6' };
 
 // ---------------------------------------------------------------- panel layout (mm on the board)
 const PANELS = [
-  { id: 'A', x: 0, y: 0, w: 1200, h: 320, title: 'System overview' },
-  { id: 'B', x: 0, y: 320, w: 600, h: 330, title: 'What is part of what' },
-  { id: 'C', x: 600, y: 320, w: 600, h: 330, title: 'Component list' },
-  { id: 'D1', x: 0, y: 650, w: 600, h: 480, title: 'Pod (snap-on vibration pod)' },
-  { id: 'D2', x: 600, y: 650, w: 600, h: 480, title: 'Desk dock (charges 6 pods)' },
-  { id: 'D3', x: 0, y: 1130, w: 300, h: 200, title: 'Vest mount (x6)' },
-  { id: 'D4', x: 300, y: 1130, w: 300, h: 200, title: 'Left glove' },
-  { id: 'D5', x: 600, y: 1130, w: 300, h: 200, title: 'Right glove' },
-  { id: 'D6', x: 900, y: 1130, w: 300, h: 200, title: 'Hub + Pi 5' },
-  { id: 'E', x: 0, y: 1330, w: 320, h: 370, title: 'Power and charging' },
-  { id: 'F', x: 320, y: 1330, w: 400, h: 370, title: 'Software map' },
-  { id: 'G', x: 720, y: 1330, w: 480, h: 370, title: 'Gesture vocabulary' },
+  { id: 'A', x: 0, y: 0, w: 900, h: 370, title: 'System overview' },
+  { id: 'E', x: 900, y: 0, w: 320, h: 370, title: 'Power and charging' },
+  { id: 'G', x: 1220, y: 0, w: 480, h: 370, title: 'Gesture vocabulary' },
+  { id: 'D1', x: 0, y: 370, w: 550, h: 480, title: 'Pod (snap-on vibration pod)' },
+  { id: 'D2', x: 550, y: 370, w: 550, h: 480, title: 'Desk dock (charges 6 pods)' },
+  { id: 'D3', x: 1100, y: 370, w: 300, h: 240, title: 'Vest mount (x6)' },
+  { id: 'D4', x: 1400, y: 370, w: 300, h: 240, title: 'Left glove' },
+  { id: 'D5', x: 1100, y: 610, w: 300, h: 240, title: 'Right glove' },
+  { id: 'D6', x: 1400, y: 610, w: 300, h: 240, title: 'Hub + Pi 5' },
+  { id: 'B', x: 0, y: 850, w: 600, h: 350, title: 'What is part of what' },
+  { id: 'C', x: 600, y: 850, w: 600, h: 350, title: 'Component list' },
+  { id: 'F', x: 1200, y: 850, w: 500, h: 350, title: 'Software map' },
 ];
 const PANEL = Object.fromEntries(PANELS.map(p => [p.id, p]));
 
@@ -183,73 +183,75 @@ function panelA() {
   const [X, Y] = at('A', 0, 0);
   // marker legend
   const lg = [['k', 'black = structure'], ['b', 'blue = data / radio'], ['r', 'red = power'], ['g', 'green = magnets / mechanical']];
-  lg.forEach(([c, s], i) => { line(X + 400 + i * 150, Y + 28, X + 425 + i * 150, Y + 28, c, { strokeWidth: 3 }); text(X + 430 + i * 150, Y + 32, s, 13, c); });
+  lg.forEach(([c, s], i) => { line(X + 280 + i * 125, Y + 28, X + 300 + i * 125, Y + 28, c, { strokeWidth: 3 }); text(X + 304 + i * 125, Y + 32, s, 11, c); });
 
-  // operator
-  const ox = X + 150, oy = Y + 70;
-  circ(ox, oy + 20, 36);                                     // head
-  line(ox, oy + 38, ox, oy + 170);                           // spine
-  line(ox, oy + 170, ox - 35, oy + 245); line(ox, oy + 170, ox + 35, oy + 245);   // legs
-  path([[ox - 45, oy + 60], [ox - 85, oy + 115], [ox - 100, oy + 150]]);          // arms
-  path([[ox + 45, oy + 60], [ox + 85, oy + 115], [ox + 100, oy + 150]]);
-  rect(ox - 45, oy + 50, 90, 110);                           // vest
-  text(ox, oy + 175, 'vest', 12, 'k', 'middle');
-  const pods = [[-36, 110, 1], [36, 110, 2], [-28, 62, 3], [28, 62, 4], [-22, 138, 5], [22, 138, 6]];
+  // operator, seen from the BACK: wearer's left is on the left of the drawing
+  const ox = X + 150, oy = Y + 80;
+  text(ox, Y + 62, 'OPERATOR (seen from the back)', 14, 'k', 'middle', 'bold');
+  circ(ox, oy + 20, 36);                                               // head
+  line(ox, oy + 38, ox, oy + 50);                                      // neck
+  line(ox, oy + 160, ox, oy + 172);                                    // hips
+  line(ox, oy + 172, ox - 32, oy + 240); line(ox, oy + 172, ox + 32, oy + 240);   // legs
+  path([[ox - 45, oy + 56], [ox - 85, oy + 112], [ox - 100, oy + 150]]);          // left arm (wearer's left)
+  path([[ox + 45, oy + 56], [ox + 85, oy + 112], [ox + 100, oy + 150]]);          // right arm
+  rect(ox - 45, oy + 50, 90, 110);                                     // vest
+  text(ox, oy + 112, 'vest', 12, 'k', 'middle');
+  // 1/2 sleeves (on the upper arms), 3/4 shoulders, 5/6 torso
+  const pods = [[-68, 86, 1], [68, 86, 2], [-26, 66, 3], [26, 66, 4], [-24, 138, 5], [24, 138, 6]];
   for (const [dx, dy, n] of pods) { poly(hex(ox + dx, oy + dy, 10), 'k'); text(ox + dx, oy + dy + 4, n, 11, 'k', 'middle'); }
-  text(X + 20, Y + 308, 'pods: 1 L sleeve · 2 R sleeve · 3 L shoulder · 4 R shoulder · 5 L torso · 6 R torso', 11);
   rect(ox - 122, oy + 145, 28, 26); text(ox - 108, oy + 190, 'L glove', 12, 'k', 'middle');
   rect(ox + 94, oy + 145, 28, 26); text(ox + 108, oy + 190, 'R glove', 12, 'k', 'middle');
   text(ox - 140, oy + 205, '4 flex + IMU', 11, 'k', 'start');
   text(ox + 82, oy + 205, '4 FSR', 11, 'k', 'start');
-  text(ox, Y + 52, 'OPERATOR', 15, 'k', 'middle', 'bold');
-
-  // dock + charging
-  const dx = X + 300, dy = Y + 262;
-  poly([[dx, dy + 30], [dx + 170, dy + 30], [dx + 170, dy + 4], [dx, dy + 16]]);
-  for (let i = 0; i < 6; i++) poly(hex(dx + 16 + i * 28, dy + 15 - i * 1.8, 8, 0.5), 'g');
-  text(dx + 85, dy - 8, 'desk dock: 6 pockets · pods snap in by magnet', 11, 'k', 'middle');
-  arrow(dx + 230, dy + 22, dx + 174, dy + 22, 'r');
-  text(dx + 234, dy + 26, 'USB-C 5 V', 12, 'r');
+  text(X + 20, Y + 340, 'pods: 1 L sleeve · 2 R sleeve · 3 L shoulder\n4 R shoulder · 5 L torso · 6 R torso', 11);
 
   // hub + Pi
-  const px = X + 520, py = Y + 105;
+  const px = X + 430, py = Y + 150;
   box(px, py, 150, 100, 'Raspberry Pi 5\nROS 2 nodes', 'k', 14);
   box(px - 95, py + 30, 60, 40, 'hub\nXIAO', 'k', 12);
   line(px - 35, py + 50, px, py + 50, 'k', { strokeWidth: 2.5 });
-  text(px, py + 118, 'USB serial 921 600 baud', 11, 'b');
-  text(px, py + 132, '↑ hermes.hub.v1 JSON lines', 11, 'b');
-  text(px, py + 146, '↓ V1,<seq>,m1..m6 @ 20 Hz', 11, 'b');
-  text(px - 95, py + 18, 'BLE central (8 links)', 11, 'b');
+  text(px + 40, py + 112, 'USB serial 921 600 baud', 11, 'b');
+  text(px + 40, py + 126, '↑ hermes.hub.v1 JSON lines', 11, 'b');
+  text(px + 40, py + 140, '↓ V1,<seq>,m1..m6 @ 20 Hz', 11, 'b');
+  text(px - 95, py + 22, 'BLE central (8 links)', 11, 'b');
 
   // BLE links
   arrow(ox - 94, oy + 150, px - 95, py + 55, 'b', dash);
   arrow(ox + 122, oy + 150, px - 95, py + 62, 'b', dash);
-  text(X + 340, Y + 232, 'gloves: BLE 50 Hz · L 48 B · R 9 B', 12, 'b');
-  arrow(px - 95, py + 38, ox + 45, oy + 80, 'b', dash);
-  text(X + 230, Y + 112, 'BLE to each pod: motor level\n≤ 20 Hz on change + 10 Hz keepalive · 2 B', 12, 'b');
+  text(X + 290, Y + 270, 'gloves: BLE 50 Hz\nL 48 B · R 9 B', 12, 'b');
+  arrow(px - 95, py + 38, ox + 50, oy + 72, 'b', dash);
+  text(X + 210, Y + 92, 'BLE to each pod: motor level\n≤ 20 Hz on change + 10 Hz keepalive · 2 B', 12, 'b');
+
+  // dock + charging
+  const dx = X + 300, dy = Y + 316;
+  poly([[dx, dy + 30], [dx + 170, dy + 30], [dx + 170, dy + 4], [dx, dy + 16]]);
+  for (let i = 0; i < 6; i++) poly(hex(dx + 16 + i * 28, dy + 15 - i * 1.8, 8, 0.5), 'g');
+  text(dx + 85, dy - 8, 'desk dock: 6 pockets · pods snap in by magnet', 11, 'k', 'middle');
+  arrow(dx + 215, dy + 22, dx + 174, dy + 22, 'r');
+  text(dx + 219, dy + 26, 'USB-C 5 V', 12, 'r');
 
   // ROS 2 over Wi-Fi to robots
-  const rx = X + 820;
-  arrow(px + 150, py + 40, rx - 10, Y + 150, 'b', dash, true);
-  text(px + 160, py + 22, 'ROS 2 over Wi-Fi', 13, 'b');
-  text(px + 160, py + 85, '/hermes/swarm_intent 10 Hz →\n← /hermes/robot_state_beacon', 11, 'b');
+  const rx = X + 640, ry = Y + 190;
+  arrow(px + 150, py + 30, rx - 8, ry + 20, 'b', dash, true);
+  text(px + 160, Y + 104, 'ROS 2 over Wi-Fi', 13, 'b');
+  text(px + 160, Y + 122, '/hermes/swarm_intent 10 Hz →\n← /hermes/robot_state_beacon', 11, 'b');
   for (let i = 0; i < 3; i++) {
-    const bx = rx + i * 105, by = Y + 150;
-    rect(bx, by, 80, 50); circ(bx + 16, by + 56, 16); circ(bx + 64, by + 56, 16);
-    text(bx + 40, by + 30, `ROSbot r${i + 1}`, 13, 'k', 'middle');
+    const bx = rx + i * 85;
+    rect(bx, ry, 76, 46); circ(bx + 15, ry + 52, 15); circ(bx + 61, ry + 52, 15);
+    text(bx + 38, ry + 28, `ROSbot r${i + 1}`, 12, 'k', 'middle');
   }
-  text(rx, Y + 240, 'each robot: own agent node → /cmd_vel 20 Hz', 11);
+  text(rx, ry + 82, 'each robot: own agent node → /cmd_vel 20 Hz', 11);
   // OptiTrack
-  const cx = X + 1010, cy = Y + 70;
-  for (let i = 0; i < 3; i++) { rect(cx + i * 50, cy, 32, 20); line(cx + i * 50 + 32, cy + 10, cx + i * 50 + 40, cy + 4); }
-  text(cx + 70, cy - 8, 'OptiTrack cameras', 12, 'k', 'middle');
-  arrow(cx + 50, cy + 26, cx - 20, Y + 145, 'b', dash);
-  text(cx - 150, Y + 125, 'NatNet poses → pose beacons', 11, 'b');
+  const cx = X + 745, cy = Y + 70;
+  for (let i = 0; i < 3; i++) { rect(cx + i * 46, cy, 30, 18); line(cx + i * 46 + 30, cy + 9, cx + i * 46 + 38, cy + 3); }
+  text(cx + 66, cy - 8, 'OptiTrack cameras', 12, 'k', 'middle');
+  arrow(cx + 50, cy + 24, cx + 20, ry - 6, 'b', dash);
+  text(cx + 62, Y + 140, 'NatNet poses\n→ pose beacons', 11, 'b');
 
   // status legend
-  text(X + 720, Y + 262, 'BUILT: ROS 2 nodes · ROSbots · OptiTrack · v1 glove carrier boards', 12);
-  text(X + 720, Y + 280, 'DESIGNED, NOT BUILT: pods · dock · vest mounts', 12);
-  text(X + 720, Y + 298, 'COMPILED, NEVER FLASHED: hub / pod / glove BLE firmware', 12);
+  text(X + 590, Y + 300, 'BUILT: ROS 2 nodes · ROSbots · OptiTrack ·\nv1 glove carrier boards', 12);
+  text(X + 590, Y + 330, 'DESIGNED, NOT BUILT: pods · dock · vest mounts', 12);
+  text(X + 590, Y + 346, 'COMPILED, NEVER FLASHED: hub / pod / glove\nBLE firmware', 12);
 }
 function hex(cx, cy, r, sy = 0.62) {
   return [[cx + r, cy], [cx + r / 2, cy - r * sy * 1.6], [cx - r / 2, cy - r * sy * 1.6], [cx - r, cy], [cx - r / 2, cy + r * sy * 1.6], [cx + r / 2, cy + r * sy * 1.6]];
@@ -451,19 +453,19 @@ function panelD2() {
   const front = view(G.front, X + 36, face.Y1 + 66, 1, 'FRONT 1:1');
   dimH(front.X0, front.X1, front.Y1 + 14, '228');
   dimV(front.X0 - 10, front.Y0, front.Y1, '34.2');
-  const side = view(G.side, front.X1 + 40, front.Y0 - 8, 1.3, 'SIDE 1.3:1');
+  const side = view(G.side, front.X1 + 25, front.Y0 - 8, 1.3, 'SIDE 1.3:1');
   dimH(side.X0, side.X1, side.Y1 + 14, '72');
   text(side.T([-20, 22])[0] - 6, side.T([0, 22])[1], '20°', 12, 'k', 'end');
 
   // iso: side profile extruded along x, pockets on the slope
-  const pr = G.side[0].poly.slice(0, -1), P = iso(X + 420, Y + 150, 0.72);
+  const pr = G.side[0].poly.slice(0, -1), P = iso(X + 395, Y + 150, 0.72);
   loft([pr.map(([y, z]) => [-114, y, z]), pr.map(([y, z]) => [114, y, z])], P);
   for (let i = 0; i < 6; i++) {
     const cx = G.slots[i][0];
     poly(hex(0, 0, 13, 0.4).map(([u, v]) => { const yy = -2 + v * Math.cos(0.349); return P([cx + u, yy, 10 + 26 / 72 * (yy + 36) + 0.5]); }), 'g', { strokeWidth: 1 });
   }
-  viewTitle(X + 330, Y + 64, 'ISO SKETCH');
-  text(X + 410, Y + 222, 'hollow underside · USB-C in the back\nwall slot 12 × 6.5 (Adafruit 6050 on\na ledge) [VERIFY board dims]', 10.5, 'r');
+  viewTitle(X + 300, Y + 64, 'ISO SKETCH');
+  text(X + 392, Y + 224, 'hollow underside · USB-C in\nthe back wall, slot 12 × 6.5\nAdafruit 6050 on a ledge\n[VERIFY board dims]', 10, 'r');
 
   // pocket detail: section along the pod axis with a pod seated (slot frame u, w)
   const ps = 4.5, ox = X + 40, oy = Y + 300;
@@ -487,18 +489,21 @@ function panelD2() {
   text(ox, sec.Y1 + 82, 'key rib stops a backwards pod (no other reverse-polarity protection)', 10.5, 'g');
 
   // pocket plan
-  const pp = 2.5, qx = X + 420, qy = Y + 296;
-  const plan = place(G.pocket_below, qx, qy, pp, { x0: -32, x1: 32, y0: -22, y1: 22, w: 64, h: 44 });
-  viewTitle(qx, qy - 30, 'POCKET PLAN 2.5:1');
-  const gem = G.pocket_plan.filter(s2 => s2.poly && bboxOf([s2]).w > 40 && bboxOf([s2]).w < 60);
-  draw(gem.length ? gem : G.pocket_plan, plan.T, pp, 'k');
-  for (const sh of G.pocket_below) if (sh.circle) {
-    const [cx, cy] = plan.T(sh.circle), r = sh.circle[2], pogo = r < 4 && Math.abs(sh.circle[0]) > 5;
+  const pp = 2.0, qx = X + 430, qy = Y + 300;
+  // same orientation as the TOP FACE view: dock +x to the right (= -v), up the slope (= +u) up
+  const turn = sh => sh.circle ? { circle: [-sh.circle[1], sh.circle[0], sh.circle[2]] } : { poly: sh.poly.map(([u, v]) => [-v, u]) };
+  const below = G.pocket_below.map(turn), above = G.pocket_plan.map(turn);
+  const plan = place(below, qx, qy, pp, { x0: -22, x1: 22, y0: -32, y1: 32, w: 44, h: 64 });
+  viewTitle(qx - 40, qy - 26, 'POCKET PLAN 2:1 (as top face)');
+  const gem = above.filter(s2 => s2.poly && bboxOf([s2]).h > 40 && bboxOf([s2]).h < 60);
+  draw(gem.length ? gem : above, plan.T, pp, 'k');
+  for (const sh of below) if (sh.circle) {
+    const [cx, cy] = plan.T(sh.circle), r = sh.circle[2], pogo = r < 4 && Math.abs(sh.circle[1]) > 5;
     circ(cx, cy, 2 * r * pp, r > 4 ? 'g' : (pogo ? 'r' : 'k'), r > 4 ? fillOf('g') : (pogo ? fillOf('r') : undefined));
   }
-  const kr = plan.T([14.5, 8]), kr2 = plan.T([16.5, -8]);
+  const kr = plan.T([-8, 16.5]), kr2 = plan.T([8, 14.5]);
   rect(kr[0], kr[1], kr2[0] - kr[0], kr2[1] - kr[1], 'g', fillOf('g'));
-  text(qx, plan.Y1 + 16, 'red: pogo holes at ±11\nblack: M2 pilots · green: magnet, key rib', 10, 'k');
+  text(qx - 10, plan.Y1 + 14, 'red: pogo holes at ±11\nblack: M2 pilots\ngreen: magnet, key rib', 10, 'k');
 }
 
 // ================================================================= D3. vest mount
@@ -548,7 +553,7 @@ function panelD6() {
   const [X, Y] = at('D6', 0, 0), s = 1.2;
   rect(X + 26, Y + 66, 85 * s, 56 * s);
   text(X + 26 + 42 * s, Y + 66 + 28 * s, 'Pi 5', 13, 'k', 'middle');
-  dimH(X + 26, X + 26 + 85 * s, Y + 58, '85 [VERIFY]', 'k', 10);
+  dimH(X + 26, X + 26 + 85 * s, Y + 58, '85', 'k', 10);
   dimV(X + 18, Y + 66, Y + 66 + 56 * s, '56', 'k', 10);
   for (let i = 0; i < 2; i++) rect(X + 26 + 85 * s - 4, Y + 70 + i * 20, 10, 15);
   const hx = X + 200, hy = Y + 90, hs = 2.4;
@@ -560,7 +565,6 @@ function panelD6() {
   dimH(hx, hx + 21 * hs, hy - 8, '21', 'k', 10);
   dimV(hx + 21 * hs + 8, hy, hy + 17.8 * hs, '17.8', 'k', 10, 1);
   text(X + 26, Y + 160, 'hub = plain XIAO nRF52840 (not Sense)\nudev → /dev/hermes_hub · BLE central', 10.5, 'b');
-  text(X + 26, Y + 190, 'Pi 5 size not in the project files', 9.5, 'grey');
 }
 
 // ================================================================= E. power
@@ -608,41 +612,48 @@ function panelF() {
   const B = (x, y, w, h, s, c = 'k', size = 10.5) => box(X + x, Y + y, w, h, s, c, size);
   const A = (x1, y1, x2, y2, c = 'b', e, both) => arrow(X + x1, Y + y1, X + x2, Y + y2, c, e, both);
   const Tt = (x, y, s, size = 10, c = 'b', anchor) => text(X + x, Y + y, s, size, c, anchor);
-  B(14, 46, 86, 30, 'glove_left\n48 B @ 50 Hz', 'b'); B(14, 82, 86, 30, 'glove_right\n9 B @ 50 Hz', 'b'); B(14, 118, 86, 30, 'pod ×6: 2 B\nstop after 300 ms', 'b', 10);
-  B(150, 48, 120, 36, 'hub fw (BLE central)', 'b');
-  A(100, 61, 150, 62); A(100, 97, 150, 70); A(150, 78, 100, 133);
-  Tt(14, 166, 'firmware: Arduino + Bluefruit,\nshared lib hv_common', 9.5, 'grey');
-  B(150, 120, 120, 34, 'vest_serial_bridge_node', 'k', 10);
-  A(210, 84, 210, 120, 'b', undefined, true); Tt(276, 104, 'USB 921 600');
-  Tt(14, 202, 'hub → Pi: hermes.hub.v1,\n.status, .devices (1/s)\nPi → hub: V1,<seq>,m1..m6', 9.5);
-  B(150, 190, 120, 34, 'gesture_pipeline_node', 'k', 10);
-  B(150, 256, 120, 34, 'swarm_control_node', 'k', 10);
-  B(150, 322, 120, 34, 'robot agent ×3 (ROSbots)', 'k', 10);
-  A(210, 154, 210, 190); Tt(276, 176, '/hermes/raw_input');
-  A(210, 224, 210, 256); Tt(276, 244, '/hermes/command_packets');
-  A(210, 290, 210, 322); Tt(276, 310, '/hermes/swarm_intent 10 Hz');
-  Tt(276, 344, '→ /cmd_vel 20 Hz');
-  B(14, 256, 96, 34, 'haptic_vest_node', 'k', 10);
-  A(150, 273, 110, 273);
-  path([[X + 62, Y + 256], [X + 62, Y + 246], [X + 130, Y + 246], [X + 130, Y + 137]], 'b', dash); A(130, 137, 150, 137, 'b');
-  Tt(14, 240, 'vest_serial_tx 20 Hz', 9.5);
-  B(14, 314, 110, 30, 'optitrack_pose_\nbeacon_node', 'k', 9.5);
-  Tt(14, 360, '→ /hermes/robot_state_beacon', 9.5);
-  Tt(276, 364, 'ROS 2 side: unchanged', 10, 'k');
+  // firmware -> hub
+  B(14, 46, 86, 28, 'glove_left\n48 B @ 50 Hz', 'b', 10); B(14, 80, 86, 28, 'glove_right\n9 B @ 50 Hz', 'b', 10);
+  B(14, 114, 86, 28, 'pod ×6: 2 B\nstop after 300 ms', 'b', 9.5);
+  B(150, 48, 120, 32, 'hub fw (BLE central)', 'b');
+  A(100, 60, 150, 62); A(100, 94, 150, 70); A(150, 76, 100, 128);
+  Tt(300, 58, 'ROS 2 side: unchanged', 11, 'k');
+  Tt(14, 160, 'firmware: Arduino + Bluefruit,\nshared lib hv_common', 9.5, 'grey');
+  Tt(14, 190, 'hub → Pi: hermes.hub.v1,\n.status, .devices (1/s)\nPi → hub: V1,<seq>,m1..m6', 9.5);
+  // ROS node chain
+  B(150, 106, 120, 32, 'vest_serial_bridge_node', 'k', 10);
+  A(210, 80, 210, 106, 'b', undefined, true); Tt(276, 98, 'USB 921 600');
+  B(150, 168, 120, 32, 'gesture_pipeline_node', 'k', 10);
+  B(150, 228, 120, 32, 'swarm_control_node', 'k', 10);
+  B(150, 290, 120, 32, 'robot agent ×3 (ROSbots)', 'k', 10);
+  A(210, 138, 210, 168); Tt(276, 158, '/hermes/raw_input');
+  A(210, 200, 210, 228); Tt(276, 214, '/hermes/command_packets');
+  A(210, 260, 210, 290); Tt(276, 282, '/hermes/swarm_intent 10 Hz');
+  Tt(276, 310, '→ /cmd_vel 20 Hz');
+  // haptic feedback back to the vest
+  B(380, 228, 106, 32, 'haptic_vest_node', 'k', 10);
+  A(270, 244, 380, 244);
+  path([[X + 420, Y + 228], [X + 420, Y + 122]], 'b', dash); A(420, 122, 270, 122, 'b', dash);
+  Tt(424, 170, 'vest_serial_tx\n20 Hz', 9.5);
+  // OptiTrack pose beacons -> swarm_control_node and haptic_vest_node
+  B(14, 240, 100, 30, 'optitrack_pose_\nbeacon_node', 'k', 9.5);
+  A(114, 248, 150, 248);
+  path([[X + 64, Y + 270], [X + 64, Y + 336], [X + 433, Y + 336]], 'b'); A(433, 336, 433, 260);
+  Tt(14, 232, '/hermes/robot_state_beacon', 9.5);
 }
 
 // ================================================================= G. gestures
 function panelG() {
   const [X, Y] = at('G', 0, 0);
   const cw = [74, 200, 200], x0 = X + 12, y0 = Y + 58, size = 10;
-  ['mode', 'CURRENT (default)', 'OPTION B (in development)'].forEach((h, i) =>
+  ['mode', 'CURRENT (fix/gesture-bugs)', 'OPTION B (in development)'].forEach((h, i) =>
     text(x0 + cw.slice(0, i).reduce((a, b) => a + b, 0), y0, h, 12, i === 2 ? 'b' : 'k', 'start', 'bold'));
   const rows = [
-    ['OPEN\nDRIVE', 'left hand tilt drives · M tap soft stop, M 2× resume · palm-up + R tap yaw, R hold precision',
+    ['OPEN\nDRIVE', 'left hand tilt drives · M tap soft stop, M 2× resume · R tap yaw toggle · R hold precision',
       'I hold + right wrist tilt drives (30° full, 4° dead zone) · M hold + roll: speed 0–4 · R hold + roll: aggression 1–4 · P tap yaw'],
     ['POINT\nSELECT', 'I/M/R/P tap: group A–D, 2×: E–G · P 2× confirm group · group edit: tap r1–r4, hold r5 / r6',
       'I/M/R/P tap: toggle r1–r4 · I/M hold: toggle r5 / r6 · R hold: all ⇄ none'],
-    ['FIST\nFORM-\nATION', 'tap: LINE, COLUMN, WEDGE, CIRCLE · 2×: ECHELON_L, ECHELON_R, GRID, DIAMOND · hold: I orient, M apply, R spacing',
+    ['FIST\nFORM-\nATION', 'tap: LINE, COLUMN, WEDGE, CIRCLE · 2×: ECHELON_L, ECHELON_R, GRID, DIAMOND · hold: I orient, M apply, R spacing, P break',
       'tap: LINE, COLUMN, WEDGE, CIRCLE · I hold + roll: menu of 9 · M: spacing 0.70–1.60 m · R: heading 45°/step · P hold: confirm'],
     ['TWO\nBEHAV-\nIOR', 'tap: PATROL, FOLLOW_PATH, HOLD_ANCHOR, RETURN_HOME · I/M 2×: PATROL_PERIMETER, FOLLOW_PATH_LOOP · R/P hold: FOLLOW_ME, DISPERSE_SCAN',
       'tap: PATROL, FOLLOW_PATH, HOLD_ANCHOR, RETURN_HOME · I hold + roll: menu of 8 · P hold: confirm'],
@@ -665,7 +676,7 @@ function panelG() {
 function boardMap() {
   for (let x = 0; x <= BOARD.w; x += 100) { line(x, 0, x, BOARD.h, 'grey', { strokeWidth: 0.6, roughness: 0 }); text(x + 3, 14, x / 10, 11, 'grey'); }
   for (let y = 0; y <= BOARD.h; y += 100) { line(0, y, BOARD.w, y, 'grey', { strokeWidth: 0.6, roughness: 0 }); text(3, y - 3, y / 10, 11, 'grey'); }
-  const order = { A: 1, B: 2, C: 3, D1: 4, D2: 5, D3: 6, D4: 7, D5: 8, D6: 9, E: 10, F: 11, G: 12 };
+  const order = { A: 1, E: 2, G: 3, D1: 4, D2: 5, D3: 6, D4: 7, D5: 8, D6: 9, B: 10, C: 11, F: 12 };
   for (const p of PANELS) {
     frame(p, true);
     text(p.x + p.w / 2, p.y + p.h / 2 + 4, `${p.w / 10} × ${p.h / 10} cm`, 26, 'k', 'middle');
@@ -684,10 +695,10 @@ function render() {
   const root = document.getElementById('root');
   document.body.className = mode;
   if (mode === 'map') {
-    svg = makeSvg(root, `0 0 ${BOARD.w} ${BOARD.h}`, 400, 566.7); rc = rough.svg(svg);
+    svg = makeSvg(root, `0 0 ${BOARD.w} ${BOARD.h}`, 566.7, 400); rc = rough.svg(svg);
     boardMap(); return;
   }
-  svg = makeSvg(root, `0 0 ${BOARD.w} ${BOARD.h}`, 600, 850); rc = rough.svg(svg);
+  svg = makeSvg(root, `0 0 ${BOARD.w} ${BOARD.h}`, 850, 600); rc = rough.svg(svg);
   const bg = document.createElementNS(NS, 'rect'); bg.setAttribute('width', BOARD.w); bg.setAttribute('height', BOARD.h); bg.setAttribute('fill', '#fff'); svg.appendChild(bg);
   PANELS.forEach(p => frame(p));
   panelA(); panelB(); panelC(); panelD1(); panelD2(); panelD3();
