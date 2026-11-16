@@ -181,6 +181,22 @@ G['dock']['consts'] = dict(
     MAG_SKIN=D.MAG_SKIN, CONTACT_X=c.CONTACT_X, PITCH=37.0, WALL=D.WALL, CLEAR=D.CLEAR,
 )
 # pod section placed in the pocket (pod frame == slot frame when seated)
+# underside: shell walls + USB ledge cut 1.5 above the desk, pin boards / screws / pogo pins projected onto the desk (dock x, y)
+import deskbar2 as DB2
+G['dock']['under'] = section(dk, (0, 0, 1.5), I[0], I[1], I[2], 0.4)
+pb_, m2_, pg_ = [], [], []
+for o, Rm in slots:
+    o, Rm = np.asarray(o), np.asarray(Rm)
+    to_dock = lambda u, v, w: (o + Rm @ np.array([u, v, w]))[:2].round(2).tolist()
+    wb = -D.BOARD_DEPTH - 0.8
+    pb_.append([to_dock(u, v, wb) for u, v in ((-15, -15), (15, -15), (15, 15), (-15, 15))])
+    m2_ += [to_dock(0, s * DB2.SCREW_V, wb) for s in (-1, 1)]
+    pg_ += [to_dock(s * c.CONTACT_X, 0, wb) for s in (-1, 1)]
+U = DB2.USB
+G['dock']['pinboards'], G['dock']['m2'], G['dock']['pogo'] = pb_, m2_, pg_
+G['dock']['usb'] = {'board': [-U['L'] / 2, DB2.WALL_IN - U['W'], U['L'] / 2, DB2.WALL_IN],
+                    'holes': [[hx, DB2.WALL_IN + hy] for hx, hy in U['holes']],
+                    'ledge': [-DB2.LEDGE_HX, DB2.LEDGE_Y0, DB2.LEDGE_HX, DB2.WALL_IN]}
 G['dock']['pod_low'] = section(pb, (0, 0, 0), I[0], I[2], -I[1], 0.25, clip=(-30, -1, 30, 6.5))
 
 # ---------------------------------------------------------------- vest mount

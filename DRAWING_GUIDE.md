@@ -31,7 +31,7 @@ Grey text in the PDF (view names, scale notes, small notes) is written in black 
 ## Order of work (about 2–3 hours in total)
 
 1. With a long ruler, draw all panel frames in black, using the board map. Write each panel letter and title in its top-left corner.
-2. Fill the panels row by row, in the board map's order: top row A, E, G · middle row D1, D2, then D3–D6 · bottom row B, C, F. Each panel below lists its steps in drawing order: structure (black) first, then data (blue), power (red), mechanics (green), then the labels.
+2. Fill the panels row by row, in the board map's order: top row A, E, G · middle row D1, D2, D3, D5, then D4 (the wide gloves panel under D3 + D5) · bottom row B, C, F. Each panel below lists its steps in drawing order: structure (black) first, then data (blue), power (red), mechanics (green), then the labels.
 
 ---
 
@@ -121,23 +121,26 @@ Views are third-angle: TOP above FRONT, SIDE to the right of FRONT.
 
 ## Panel D2: Desk dock (top-left (55, 37), 55 × 48 cm), full detail
 
-1. **TOP FACE 1:1** (looking square onto the 20° slope) at (3.6, 7), 22.1 × 6.9 cm: rounded-corner bar with **six gem pockets** (hexagons) side by side.
-   Dimension "221 along the face". Note: "pockets 37 apart · pocket wall 0.5 from the pod".
-2. **FRONT 1:1** at (3.6, 20.5), 22.8 × 3.4 cm: long low rectangle, top corners chamfered. Dimensions 228 and 34.2.
-3. **SIDE 1.3:1** at (28.9, 19.7), 9.4 × 4.4 cm: wedge. Low front (left, 1.5 cm), slope up to the tall back (right). Write "20°" at the slope, dimension 72.
-4. **ISO SKETCH** around (39.5, 15): the side wedge extruded 228 long; six <span class="g">green hexagons</span> on the slope.
-   <span class="r">Red note: "hollow underside · USB-C in the back wall slot 12 × 6.5 (Adafruit 6050 on a ledge) [VERIFY board dims]"</span>.
-5. **POCKET SECTION 4.5:1**, how snap-on charging works, at (4, 30), 27 × 8.1 cm. Draw in this order:
-   1. black: the dock top skin around the pocket (as in the PDF), with the pocket floor and the two pogo holes;
-   2. black: pin board, a thin rectangle 13.5 cm wide just under the skin (30 × 30 board at 6.79 below the floor), "pin board 30 × 30 (M2 screws)";
-   3. <span class="r">red: two pogo pins, vertical bars from the pin board up to the floor, 9.9 cm apart (±11 mm), with the brass pads on top of them</span>;
-   4. <span class="g">green: dock magnet under the floor (0.5 skin) and pod magnet just above the floor, both hatched; key rib at the right</span>;
-   5. black dashed: the pod's bottom sitting in the pocket;
-   6. callouts: "pod magnet", "brass pad", "key rib in groove" above. "pogo pin · tip 0.7 proud · stroke 1.40 · ~0.65 pressed" on the right, "dock magnet under 0.5 skin" below.
-   7. Under it, in green: "magnets ≈ 870 gf vs 2 pins ≈ 187 gf → 4.6 × [VERIFY: estimate, N35 assumed]" and "key rib stops a backwards pod (no other reverse-polarity protection)".
-6. **POCKET PLAN 2:1, in the same orientation as the TOP FACE view** (dock length left–right, up the slope = up), at (43, 30), 8.8 × 12.8 cm:
-   tall gem outline (black); <span class="g">magnet Ø10.2 hatched in the centre, key rib bar across the top end (back of the pocket)</span>;
-   <span class="r">two pogo holes at ±11 above and below the magnet</span>; two black M2 pilot dots left and right of the magnet.
+1. **TOP FACE 1:1** (looking square onto the 20° slope) at (2, 6.4), 22.1 × 6.9 cm: rounded-corner bar with **six gem pockets** side by side.
+   Dimension "221 along the face · pockets 37 apart".
+2. **SIDE 1.3:1** at (26.8, 7.6), 9.4 × 4.4 cm: wedge. Low front (left), slope up to the tall back (right). "20°" at the slope, dimensions 72 and 34.2.
+3. **POCKET PLAN 2:1, in the same orientation as the top face**, at (44, 8.4), 8.8 × 12.8 cm: tall gem outline (black); <span class="g">magnet Ø10.2 hatched in the centre,
+   key rib bar across the top end (back of the pocket)</span>; <span class="r">pogo pins at ±11 above and below the magnet</span>; black M2 pilot dots left and right.
+4. **UNDERSIDE 1:1, seen from below (front edge at the top)**, at (2, 17.2), 22.8 × 7.2 cm:
+   1. black: outer wall and inner wall (the bar is hollow, 3 mm walls). Six small grey marks along the front are bits of the pocket floors cut at the same height; draw them lightly or leave them out;
+   2. black: **6 pin boards** (squares, 30 × 28 projected), each with **2 M2 screws** (small circles, left and right of the centre);
+   3. <span class="r">red dots: the 2 pogo pin tails per board (front row and back row)</span>;
+   4. <span class="r">red rectangle at the back wall: USB-C board (Adafruit 6050, 20.4 × 14.7 [VERIFY dims]) on its ledge, connector poking through the back wall</span>;
+   5. **daisy-chain**: a <span class="r">red +5 V line</span> from the USB board along the back pogo row to all six boards, and a black GND line along the front pogo row. Note: "route [VERIFY]".
+5. **DOCKING SEQUENCE 2.4:1**, three steps side by side from (1.4, 31.8), each 14.4 × 10.6 cm, cut along the pod axis. Title: "dock = hatched, pod = dashed outline".
+   In every step: the dock skin around the pocket (black outline, grey hatching), the pin board (black), the dock magnet (green), two pogo pins (red bars) and the key rib.
+   The pod is a **dashed** outline with its magnet (green), two brass pads (red) and the key groove.
+   1. **pod above the pocket**: pod 10 mm up. Under it: "pins up: tip 0.7 proud (stroke 1.40)".
+   2. **magnets pull it in**: pod 0.6 mm up, two green arrows pushing it down, key rib entering the groove. Under it, in green: "key rib enters the groove · magnets ≈ 870 gf vs pins ≈ 187 gf → 4.6 × [VERIFY]".
+   3. **seated: 5 V flows**: pod down, pins pressed ~0.65. Add the backpack (black) and the <span class="b">XIAO (blue)</span> inside the pod.
+      Draw the <span class="r">thick red 5 V path: pin board → up the pogo pin → brass pad → (dashed: wire beside the battery) → XIAO</span>.
+      Labels sit on **vertical leader lines** with the text to the left of each line, so no two leaders cross.
+      Below: pin board · dock magnet · pogo pin, pressed ~0.65 · key rib in groove. Above: XIAO (VBUS → charger) · pod magnet · brass pad → 5 V path.
 
 ## Panel D3: Vest mount ×6 (top-left (110, 37), 30 × 24 cm), medium
 
@@ -147,23 +150,41 @@ Views are third-angle: TOP above FRONT, SIDE to the right of FRONT.
 3. **ISO** at (20, 9.5): flat octagon plate with a lower octagon ring on top.
 4. Green notes: "magnet Ø10.2 flush · key rib · thumb notch · 6 sewing holes · 2 strap slots (20 mm)".
 
-## Panels D4 and D5: Left glove and Right glove (top-left (140, 37) and (110, 61), 30 × 24 cm each), medium
+## Panel D5: Hub + Pi 5 (top-left (140, 37), 30 × 24 cm), medium
 
-Both enclosures are the same, apart from the height.
+1. **WHERE** (left, from (1.4, 5.8)): a small stick operator ("operator: no cables"), and a bench line with the Pi box and the blue hub on it.
+   A dashed blue BLE arrow goes from the operator to the hub, and dashed Wi-Fi arcs from the Pi labelled "Wi-Fi → ROSbots".
+   Note: "Pi + hub beside the operator [VERIFY]". The deck's vest photo shows the Pi on the chair beside the vest, and with BLE nothing on the body is wired.
+2. **Pi 5 outline 1:1** at (15, 6.2), 8.5 × 5.6 cm. Dimensions 85 and 56. Draw only the ports that matter:
+   two USB-A pairs and Ethernet on the right short edge, and <span class="r">USB-C power on the bottom edge, near the left</span>.
+   Notes: <span class="r">"USB-C power [VERIFY supply]"</span> and "Ethernet unused (Wi-Fi)".
+3. <span class="b">Hub XIAO 2:1</span> (4.2 × 3.6 cm) at (19.6, 16), with its USB-C on the right end. A thick black USB cable runs from the Pi's top USB-A port down to it.
+   Notes: "hub 21 × 17.8", "antenna: far end [VERIFY]".
+4. **RUNS HERE** (bottom left, from (1.4, 17.6)): <span class="b">"hub XIAO: hub firmware (BLE central, 8 links → JSON over USB)"</span> and
+   "Pi 5 (ROS 2): vest_serial_bridge, gesture_pipeline, swarm_control, haptic_vest, optitrack_pose_beacon".
 
-1. **TOP 0.95:1** at (2.6, 7), 7.7 × 5.8 cm: a square box with a strap flange sticking out on each side (a plus-sign shape).
-   Dimensions "81 with flanges" and 61. Dashed rectangle inside: "carrier 60 × 56".
-2. **FRONT** below it: box on a wider flange plate. Height **25.6** (left) or **22.6** (right).
-3. **ISO** at (16, 10): a box, plus a flat plate under it that sticks out at both ends.
-4. Blue notes:
-   - left: "XIAO nRF52840 Sense · onboard IMU: deadman, shake ESTOP · 4 flex · index→A3 … pinky→A0 · lid sized for old GY-521 [VERIFY lower lid]";
-   - right: "XIAO nRF52840 Sense · IMU off (current) · 4 FSR · index→A3 … pinky→A0 · option B: IMU on".
+## Panel D4: Gloves (L + R) (top-left (110, 61), 60 × 24 cm), medium
 
-## Panel D6: Hub + Pi 5 (top-left (140, 61), 30 × 24 cm), medium
+1. **Two hands, back view**, with the wrist at y 19: **LEFT** centred at x 7.5 (thumb on the right) and **RIGHT** centred at x 22.5 (thumb on the left). Draw them at 0.75:1.
+   The palm is 6 cm wide and 5.6 cm from wrist to knuckles (80 mm hand, 75 mm knuckle to wrist in the glove PCB spec). Add four finger outlines, a thumb, and the wrist strap (two thick lines).
+2. On each hand: **the box** (black, 4.9 × 4.6 cm, 65 × 61 real) on the back of the hand, and the <span class="r">battery (small red block) on the wrist strap,
+   with a 2-wire tether up to the box</span>. Thin blue sensor cables run from the box to the fingers.
+3. Left hand: <span class="g">a green splint along each finger</span>, holding the flex sensor. Note: "flex sensor in a splint along each finger".
+4. Right hand: <span class="b">a blue FSR pad at each fingertip</span>. Notes: <span class="g">"thumb = contact"</span> next to the thumb, and "FSR pad at each fingertip, pressed by the thumb".
+5. Bottom line, in red: "battery on the wrist strap, 2-wire tether; box on the back of the hand (glove PCB spec)".
+6. **INSIDE THE BOX: carrier v1 60 × 56, 2:1** at (28.2, 8.4), 12 × 11.2 cm: board outline (rounded top corners, chamfered bottom corners);
+   4 connectors **J1–J4** along the top edge, 2.4 cm apart (12 mm pitch), labelled <span class="b">A3 A2 A1 A0</span> above them, plus the note "J1 index … J4 pinky";
+   below them the 4 divider channels (R1–R8 + C1–C4, three small marks per channel); the <span class="b">XIAO Sense (hatched blue, 21 × 17.8)</span> in its sockets with the USB-C on the right;
+   <span class="r">J5 battery</span> at the lower left; 4 mounting holes in the corners.
+7. **L vs R table** at (44.6, 6.2):
 
-1. Black rectangle 10.2 × 6.7 cm at (2.6, 6.6): "Pi 5". Dimensions 85 and 56. Two small USB ports on the right edge.
-2. A thick USB cable to a <span class="b">blue XIAO rectangle 5 × 4.3 cm</span> at (20, 9) with its USB-C on the left. Dimensions 21 and 17.8.
-3. Blue notes: "hub = plain XIAO nRF52840 (not Sense) · udev → /dev/hermes_hub · BLE central".
+   | | LEFT | RIGHT |
+   |---|---|---|
+   | sensors | 4 flex | 4 FSR402 |
+   | divider | 68 k | 10 k |
+   | in | R1–R4 | R5–R8 |
+   | IMU | deadman, shake ESTOP | off now; B: wrist drive |
+   | box h | 25.6 | 22.6 |
 
 ## Panel B: What is part of what (top-left (0, 85), 60 × 35 cm)
 
@@ -241,6 +262,11 @@ Footnotes on the board: <span class="g">magnets: 6 pod + 6 dock + 6 vest = 18</s
 | BOM and Spanish context | `haptic-vest/shopping_list.csv`, `H.E.R.M.E.S Project/hardware/pcb/BOM.md` |
 | Glove enclosures 65 × 61 × 25.6 / 22.6 | `H.E.R.M.E.S Project/hardware/enclosure/pod_v1_{left,right}_*.stl`, `SPEC.md` |
 | Raspberry Pi 5 85 × 56 | confirmed by the user |
+| Glove layout: box on the back of the hand, battery on the wrist strap with a 2-wire tether, hand 80 × 75 | `H.E.R.M.E.S Project/docs/superpowers/specs/2026-09-30-glove-pcb-design.md` |
+| Carrier board outline, J1–J5, dividers, XIAO position | `hardware/pcb/glove_carrier/glove_carrier.kicad_pcb`, `DESIGN_TOUR.md`, `BOM.md` |
+| Splints, fingertip FSRs, thumb as the contact | the user's brief (not in the repo) |
+| Pi + hub off the body | deck photo `docs/talk/img/vest.jpg` (Pi beside the vest) + no wires on the operator with BLE; [VERIFY] |
+| Dock underside: pin boards, M2 screws, USB board + ledge | `haptic-vest/src/cad_dock.py` slots, `deskbar2.py` (`SCREW_V`, `USB_BOARDS`, `LEDGE_*`, `WALL_IN`) |
 | Glove pin map, IMU on/off | `haptic-vest/firmware/glove_left`, `glove_right` |
 | ROS nodes, topics, rates | `H.E.R.M.E.S Project/ros_version/src/hermes_control/hermes_control/*_node.py` parameter defaults |
 | 3 ROSbots (r1–r3) | `ros_version/.../config/optitrack_version1_lab.yaml` (`robot_ids: [r1, r2, r3]`) |
@@ -255,4 +281,5 @@ The Spanish one-word names are translations, not taken from a source.
 - Adafruit 6050 USB-C board dimensions are provisional (dock stays out of the print pack until it is measured with calipers).
 - The shopping list orders 1 XIAO nRF52840 Sense; two gloves need 2.
 - Left-glove lid height (25.6) was set by the GY-521. With the Sense's onboard IMU, a lower lid may be possible.
+- Pi + hub placement (beside the operator), the Pi's power supply, the hub's antenna end, and the dock's daisy-chain wire route.
 - Not yet measured or flashed: pod, dock and vest-mount parts, all BLE firmware (compiled, never flashed), and the motor PWM frequency.

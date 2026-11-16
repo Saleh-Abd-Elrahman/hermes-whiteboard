@@ -14,9 +14,8 @@ const PANELS = [
   { id: 'D1', x: 0, y: 370, w: 550, h: 480, title: 'Pod (snap-on vibration pod)' },
   { id: 'D2', x: 550, y: 370, w: 550, h: 480, title: 'Desk dock (charges 6 pods)' },
   { id: 'D3', x: 1100, y: 370, w: 300, h: 240, title: 'Vest mount (x6)' },
-  { id: 'D4', x: 1400, y: 370, w: 300, h: 240, title: 'Left glove' },
-  { id: 'D5', x: 1100, y: 610, w: 300, h: 240, title: 'Right glove' },
-  { id: 'D6', x: 1400, y: 610, w: 300, h: 240, title: 'Hub + Pi 5' },
+  { id: 'D5', x: 1400, y: 370, w: 300, h: 240, title: 'Hub + Pi 5' },
+  { id: 'D4', x: 1100, y: 610, w: 600, h: 240, title: 'Gloves (L + R)' },
   { id: 'B', x: 0, y: 850, w: 600, h: 350, title: 'What is part of what' },
   { id: 'C', x: 600, y: 850, w: 600, h: 350, title: 'Component list' },
   { id: 'F', x: 1200, y: 850, w: 500, h: 350, title: 'Software map' },
@@ -427,57 +426,53 @@ function panelD1() {
 }
 
 // ================================================================= D2. dock
+// leaders: vertical only; labels sorted by anchor x get rows in that order with text to the LEFT of the
+// leader, so no leader ever crosses another leader or a label.
+function leaders(items, T, yRow0, step, up, size = 10) {
+  items.slice().sort((a, b) => a.at[0] - b.at[0]).forEach((it, k) => {
+    const [ax, ay] = T(it.at), y = yRow0 + (up ? -1 : 1) * k * step;
+    line(ax, ay, ax, y + (up ? 3 : -9), it.c, { strokeWidth: 0.8, roughness: 0.3 });
+    text(ax - 3, y, it.s, size, it.c, 'end');
+  });
+}
 function panelD2() {
-  const G = GEOM.dock, K = G.consts, [X, Y] = at('D2', 0, 0);
+  const G = GEOM.dock, K = G.consts, P = GEOM.pod, [X, Y] = at('D2', 0, 0);
+  // top face (square onto the slope)
   const pockets = G.face.slice(1).filter(f => bboxOf([f]).w > 20);
-  const face = view(G.face.slice(0, 1).concat(pockets), X + 36, Y + 70, 1, 'TOP FACE 1:1 (square onto the 20° slope)');
-  dimH(face.X0, face.X1, face.Y1 + 14, `${bboxOf([G.face[0]]).w.toFixed(0)} along the face`);
-  text(face.X0, face.Y1 + 34, 'pockets 37 apart · pocket wall 0.5 from the pod', 10.5);
-  const front = view(G.front, X + 36, face.Y1 + 66, 1, 'FRONT 1:1');
-  dimH(front.X0, front.X1, front.Y1 + 14, '228');
-  dimV(front.X0 - 10, front.Y0, front.Y1, '34.2');
-  const side = view(G.side, front.X1 + 25, front.Y0 - 8, 1.3, 'SIDE 1.3:1');
-  dimH(side.X0, side.X1, side.Y1 + 14, '72');
+  const face = view(G.face.slice(0, 1).concat(pockets), X + 20, Y + 64, 1, 'TOP FACE 1:1 (square onto the 20° slope)');
+  dimH(face.X0, face.X1, face.Y1 + 12, `${bboxOf([G.face[0]]).w.toFixed(0)} along the face · pockets 37 apart`);
+  // side
+  const side = view(G.side, X + 268, Y + 76, 1.3, 'SIDE 1.3:1');
+  dimH(side.X0, side.X1, side.Y1 + 12, '72'); dimV(side.X1 + 10, side.Y0, side.Y1, '34.2', 'k', 10.5, 1);
   text(side.T([-20, 22])[0] - 6, side.T([0, 22])[1], '20°', 12, 'k', 'end');
 
-  // iso: side profile extruded along x, pockets on the slope
-  const pr = G.side[0].poly.slice(0, -1), P = iso(X + 395, Y + 150, 0.72);
-  loft([pr.map(([y, z]) => [-114, y, z]), pr.map(([y, z]) => [114, y, z])], P);
-  for (let i = 0; i < 6; i++) {
-    const cx = G.slots[i][0];
-    poly(hex(0, 0, 13, 0.4).map(([u, v]) => { const yy = -2 + v * Math.cos(0.349); return P([cx + u, yy, 10 + 26 / 72 * (yy + 36) + 0.5]); }), 'g', { strokeWidth: 1 });
-  }
-  viewTitle(X + 300, Y + 64, 'ISO SKETCH');
-  text(X + 392, Y + 224, 'hollow underside · USB-C in\nthe back wall, slot 12 × 6.5\nAdafruit 6050 on a ledge\n[VERIFY board dims]', 10, 'r');
+  // underside, seen from below (front edge at the top), 1:1
+  const flip = sh => sh.circle ? { circle: [sh.circle[0], -sh.circle[1], sh.circle[2]] } : { poly: sh.poly.map(([x, y]) => [x, -y]) };
+  const und = G.under.map(flip), ub = { x0: -114, x1: 114, y0: -36, y1: 36, w: 228, h: 72 };
+  const u = place(und, X + 20, Y + 172, 1, ub);
+  viewTitle(X + 20, Y + 166, 'UNDERSIDE 1:1 (seen from below, front edge at the top) — hollow, 3 mm walls');
+  und.forEach((sh, i) => draw([sh], u.T, 1, i < 2 ? 'k' : 'grey', { strokeWidth: i < 2 ? 1.5 : 0.8 }));
+  const D = ([x, y]) => u.T([x, -y]);
+  for (const b of G.pinboards) poly(b.map(D), 'k', { strokeWidth: 1.2 });
+  for (const m of G.m2) circ(...D(m), 4, 'k');
+  for (const pg of G.pogo) circ(...D(pg), 3.5, 'r', fillOf('r'));
+  const ub2 = G.usb.board, [ua, ub_] = [D([ub2[0], ub2[3]]), D([ub2[2], ub2[1]])];
+  rect(ua[0], ua[1], ub_[0] - ua[0], ub_[1] - ua[1], 'r');
+  rect(...D([-4.5, 36]), 9, 4, 'r', fillOf('r'));
+  // daisy chain: +5 V on the back pogo row, GND on the front row [VERIFY route]
+  const yP = G.pogo[1][1], yG = G.pogo[0][1], xs = G.pogo.filter((_, i) => i % 2 === 0).map(p => p[0]);
+  const xl = Math.min(...xs), xr = Math.max(...xs);
+  path([D([-3, ub2[1]]), D([-3, yP]), D([xl, yP])], 'r'); line(...D([-3, yP]), ...D([xr, yP]), 'r');
+  path([D([3, ub2[1]]), D([3, yP + 2]), D([5, yP + 2]), D([5, yG])], 'k', { strokeWidth: 1 });
+  line(...D([xl, yG]), ...D([xr, yG]), 'k', { strokeWidth: 1 });
+  text(X + 20, u.Y1 + 13, 'red dots: pogo pin tails · USB-C board 20.4 × 14.7 on the back ledge [VERIFY dims]', 10, 'r');
+  text(X + 20, u.Y1 + 25, 'daisy-chain: +5 V (red) on the back pogo row, GND (black) on the front row · route [VERIFY]', 10, 'k');
 
-  // pocket detail: section along the pod axis with a pod seated (slot frame u, w)
-  const ps = 4.5, ox = X + 40, oy = Y + 300;
-  const sec = place(G.pocket_sec, ox, oy, ps, { x0: -30, x1: 30, y0: -11, y1: 7, w: 60, h: 18 });
-  viewTitle(ox, oy - 34, 'POCKET SECTION 4.5:1 — how snap-on charging works (pod seated)');
-  draw(G.pocket_sec, sec.T, ps, 'k', { strokeWidth: 1.2 });
-  draw(G.pod_low, sec.T, ps, 'k', Object.assign({ strokeWidth: 1 }, dash));
-  const R = (u0, w0, u1, w1, c, f) => { const [a, b] = sec.T([u0, w1]), [cc, d] = sec.T([u1, w0]); rect(a, b, cc - a, d - b, c, f ? fillOf(c) : undefined); };
-  R(-15, -K.BOARD_DEPTH - K.BT, 15, -K.BOARD_DEPTH, 'k');                          // pin board
-  R(-5, -3.5, 5, -0.5, 'g', 1); R(-5, 0.1, 5, 3.1, 'g', 1);                        // dock + pod magnets
-  for (const u of [-K.CONTACT_X, K.CONTACT_X]) { R(u - 0.69, -K.BOARD_DEPTH, u + 0.69, 0.05, 'r'); R(u - 2, 0.05, u + 2, 0.55, 'r', 1); }
-  // callouts: leader from a point in the slot frame to a label
-  const call = (u, w, tx, ty, s2, c, anchor = 'start') => { const [a, b] = sec.T([u, w]); line(a, b, tx, ty - 4, c, { strokeWidth: 0.9 }); text(tx + (anchor === 'end' ? -2 : 2), ty, s2, 10.5, c, anchor); };
-  call(-2, 2.5, ox + 150, oy - 12, 'pod magnet', 'g', 'end');
-  call(15.5, 0.6, sec.X1 - 10, oy - 12, 'key rib in groove', 'g', 'end');
-  call(-11, 0.3, ox + 70, oy - 12, 'brass pad', 'r', 'end');
-  call(2, -2, ox + 120, sec.Y1 + 34, 'dock magnet under 0.5 skin', 'g');
-  call(-14, -K.BOARD_DEPTH - 0.8, ox, sec.Y1 + 16, 'pin board 30 × 30 (M2 screws)', 'k');
-  call(11.6, -4, sec.X1 + 8, oy + 40, 'pogo pin\ntip 0.7 proud\nstroke 1.40\n~0.65 pressed', 'r');
-  text(ox, sec.Y1 + 66, 'magnets ≈ 870 gf vs 2 pins ≈ 187 gf → 4.6 × [VERIFY: estimate, N35 assumed]', 10.5, 'g');
-  text(ox, sec.Y1 + 82, 'key rib stops a backwards pod (no other reverse-polarity protection)', 10.5, 'g');
-
-  // pocket plan
-  const pp = 2.0, qx = X + 430, qy = Y + 300;
-  // same orientation as the TOP FACE view: dock +x to the right (= -v), up the slope (= +u) up
-  const turn = sh => sh.circle ? { circle: [-sh.circle[1], sh.circle[0], sh.circle[2]] } : { poly: sh.poly.map(([u, v]) => [-v, u]) };
-  const below = G.pocket_below.map(turn), above = G.pocket_plan.map(turn);
+  // pocket plan 2:1, same orientation as the top face
+  const turn = sh => sh.circle ? { circle: [-sh.circle[1], sh.circle[0], sh.circle[2]] } : { poly: sh.poly.map(([a, b]) => [-b, a]) };
+  const below = G.pocket_below.map(turn), above = G.pocket_plan.map(turn), pp = 2.0, qx = X + 440, qy = Y + 84;
   const plan = place(below, qx, qy, pp, { x0: -22, x1: 22, y0: -32, y1: 32, w: 44, h: 64 });
-  viewTitle(qx - 40, qy - 26, 'POCKET PLAN 2:1 (as top face)');
+  viewTitle(qx - 34, qy - 8, 'POCKET PLAN 2:1 (as top face)');
   const gem = above.filter(s2 => s2.poly && bboxOf([s2]).h > 40 && bboxOf([s2]).h < 60);
   draw(gem.length ? gem : above, plan.T, pp, 'k');
   for (const sh of below) if (sh.circle) {
@@ -486,7 +481,43 @@ function panelD2() {
   }
   const kr = plan.T([-8, 16.5]), kr2 = plan.T([8, 14.5]);
   rect(kr[0], kr[1], kr2[0] - kr[0], kr2[1] - kr[1], 'g', fillOf('g'));
-  text(qx - 10, plan.Y1 + 14, 'red: pogo holes at ±11\nblack: M2 pilots\ngreen: magnet, key rib', 10, 'k');
+  text(qx - 34, plan.Y1 + 14, 'red: pogo pins ±11 · black: M2\ngreen: magnet, key rib (back)', 10);
+
+  // ---- docking sequence: pocket section along the pod axis (slot frame u, w), dock hatched, pod dashed
+  const ss = 2.4, win = { x0: -30, x1: 30, y0: -10, y1: 34, w: 60, h: 44 }, top = Y + 318;
+  text(X + 14, top - 26, 'DOCKING SEQUENCE 2.4:1 (cut along the pod axis) — dock = hatched, pod = dashed outline', 11, 'k', 'start', 'bold');
+  const podOutline = P.front[0].poly;
+  const step = (i, dw, pinTip, caption) => {
+    const sx = X + 14 + i * 180, v = place(G.pocket_sec, sx, top, ss, win), T = v.T;
+    text(sx, top - 8, caption, 10.5, 'k', 'start', 'bold');
+    draw(G.pocket_sec, T, ss, 'k', { strokeWidth: 1.2, fill: INK.grey, fillStyle: 'hachure', hachureGap: 5, fillWeight: 0.5 });
+    const R = (u0, w0, u1, w1, c, f, e) => { const [a, b] = T([u0, w1]), [cc, d] = T([u1, w0]); rect(a, b, cc - a, d - b, c, Object.assign(f ? fillOf(c) : {}, e || {})); };
+    R(-15, -K.BOARD_DEPTH - K.BT, 15, -K.BOARD_DEPTH, 'k');                       // pin board
+    R(-5, -3.5, 5, -0.5, 'g', 1);                                                  // dock magnet
+    for (const s of [-1, 1]) R(s * K.CONTACT_X - 0.69, -K.BOARD_DEPTH, s * K.CONTACT_X + 0.69, pinTip, 'r', 1);
+    // pod: dashed outline, magnet, pads, key groove
+    poly(podOutline.slice(0, -1).map(([x, z]) => T([x, z + dw])), 'k', Object.assign({ strokeWidth: 1.3 }, dash));
+    R(-5, 0.1 + dw, 5, 3.1 + dw, 'g', 1);
+    for (const s of [-1, 1]) R(s * K.CONTACT_X - 2, dw, s * K.CONTACT_X + 2, 0.5 + dw, 'r', 1);
+    R(15.5 - 1.3, dw, 15.5 + 1.3, 1.0 + dw, 'k', 0, { strokeWidth: 0.8 });
+    return { T, sx, R };
+  };
+  const s1 = step(0, 10, K.POGO_PROUD, '1  pod above the pocket');
+  text(s1.sx + 4, top + win.h * ss + 14, 'pins up: tip 0.7 proud\n(stroke 1.40)', 10, 'r');
+  const s2 = step(1, 0.6, K.POGO_PROUD, '2  magnets pull it in');
+  for (const ux of [-3, 3]) arrow(...s2.T([ux, 9]), ...s2.T([ux, 4.2]), 'g');
+  text(s2.sx + 4, top + win.h * ss + 14, 'key rib enters the groove\nmagnets ≈ 870 gf vs pins\n≈ 187 gf → 4.6 × [VERIFY]', 10, 'g');
+  const s3 = step(2, 0, 0.05, '3  seated: 5 V flows');
+  s3.R(-15, 8.8, 15, 10.4, 'k'); s3.R(-15, 10.5, 6, 12.1, 'b', 1);                // backpack + XIAO
+  // 5 V path: pin board -> pogo pin -> brass pad -> wire beside the battery -> XIAO VBUS
+  path([s3.T([11, -7.6]), s3.T([11, 0.3])], 'r', { strokeWidth: 3 });
+  path([s3.T([11, 0.3]), s3.T([9.5, 4]), s3.T([9.5, 9.6]), s3.T([6.4, 11.3])], 'r', Object.assign({ strokeWidth: 2.2 }, dash));
+  arrow(...s3.T([7.6, 10.6]), ...s3.T([6.3, 11.3]), 'r');
+  leaders([{ at: [-13, -7.6], s: 'pin board', c: 'k' }, { at: [-2, -2], s: 'dock magnet', c: 'g' },
+    { at: [10.4, -4], s: 'pogo pin, pressed ~0.65', c: 'r' }, { at: [16.3, 0.35], s: 'key rib in groove', c: 'g' }],
+  s3.T, top + win.h * ss + 11, 10.5, false);
+  leaders([{ at: [-9, 12.1], s: 'XIAO (VBUS → charger)', c: 'b' }, { at: [-2, 3.1], s: 'pod magnet', c: 'g' },
+    { at: [12.8, 0.5], s: 'brass pad → 5 V path', c: 'r' }], s3.T, s3.T([0, 19])[1] - 6, 10.5, true);
 }
 
 // ================================================================= D3. vest mount
@@ -510,44 +541,112 @@ function panelD3() {
   text(X + 170, Y + 140, 'magnet Ø10.2 flush\nkey rib · thumb notch\n6 sewing holes\n2 strap slots (20 mm)', 10.5, 'g');
 }
 
-// ================================================================= D4 / D5. gloves
-function panelGlove(id, key, isLeft) {
-  const G = GEOM[key], [X, Y] = at(id, 0, 0), s = 0.95, H = isLeft ? 25.6 : 22.6;
-  const tp = view(G.top, X + 26, Y + 70, s);
-  viewTitle(tp.X1 + 6, tp.Y0 - 8, 'TOP 0.95:1');
-  dimH(tp.X0, tp.X1, tp.Y0 - 10, '81 with flanges', 'k', 10.5);
-  dimV(tp.X0 - 8, tp.Y0, tp.Y1, '61', 'k', 10.5);
-  const a = tp.T([0, 56]), b = tp.T([60, 0]);
-  rect(a[0], a[1], b[0] - a[0], b[1] - a[1], 'k', Object.assign({ strokeWidth: 1 }, dash));
-  text((a[0] + b[0]) / 2, (a[1] + b[1]) / 2 - 2, 'carrier\n60 × 56', 10, 'k', 'middle');
-  const fr = view(G.front, X + 26, tp.Y1 + 16, s);
-  dimV(fr.X1 + 8, fr.Y0, fr.Y1, H.toFixed(1), 'k', 10.5, 1);
-  viewTitle(fr.X0 + 30, fr.Y0 - 3, 'FRONT');
-  const P = iso(X + 160, Y + 100, 0.6);
-  boxIso(-2.5, -2.5, 2.05, 62.5, 58.5, H - 2, P);
-  boxIso(-10.5, 16, -2, 70.5, 40, 2.05, P);
-  text(X + 150, Y + 124, isLeft
-    ? 'XIAO nRF52840 Sense\nonboard IMU: deadman,\nshake ESTOP · 4 flex\nindex→A3 … pinky→A0\nlid sized for old GY-521\n[VERIFY lower lid]'
-    : 'XIAO nRF52840 Sense\nIMU off (current) · 4 FSR\nindex→A3 … pinky→A0\noption B: IMU on', 10, 'b');
+// ================================================================= D4. gloves (L + R)
+function hand(cx, wy, s, mirror, ink) {   // back of the hand; wy = wrist line; returns finger tips (index..pinky)
+  const mx = x => cx + (mirror ? -x : x) * s, my = y => wy - y * s;
+  // palm 80 wide, 75 knuckle-to-wrist (glove PCB spec); fingers schematic
+  const palm = [[-38, 0], [-40, 60], [-36, 75], [36, 75], [40, 60], [38, 0]];
+  path(palm.map(([x, y]) => [mx(x), my(y)]), ink);
+  const fingers = [[-27, 62], [-9, 70], [9, 66], [26, 52]], tips = [];   // index .. pinky (x from the thumb side)
+  fingers.forEach(([fx, L]) => {
+    path([[mx(fx - 7), my(75)], [mx(fx - 7), my(75 + L)], [mx(fx + 7), my(75 + L)], [mx(fx + 7), my(75)]], ink);
+    tips.push([mx(fx), my(75 + L)]);
+  });
+  path([[mx(-38), my(28)], [mx(-62), my(55)], [mx(-58), my(62)], [mx(-36), my(48)]], ink);   // thumb
+  line(mx(-44), my(-2), mx(44), my(-2), 'k', { strokeWidth: 3 }); line(mx(-44), my(-14), mx(44), my(-14), 'k', { strokeWidth: 3 });  // wrist strap
+  return { tips, fingers, mx, my, thumb: [mx(-60), my(58)] };
+}
+function panelD4() {
+  const [X, Y] = at('D4', 0, 0), s = 0.75;
+  // LEFT hand (back view: thumb on the right) and RIGHT hand (thumb on the left)
+  const both = [['LEFT (back of hand)', X + 75, false], ['RIGHT (back of hand)', X + 225, true]];
+  both.forEach(([ttl, cx, isRight]) => {
+    const wy = Y + 190, h = hand(cx, wy, s, !isRight, 'k');
+    text(cx, Y + 56, ttl, 11, 'k', 'middle', 'bold');
+    // carrier box 65 x 61 on the back of the hand
+    rect(Math.min(h.mx(-32.5), h.mx(32.5)), h.my(67), 65 * s, 61 * s, 'k', { strokeWidth: 2 });
+    text(cx, h.my(38), 'box', 10, 'k', 'middle');
+    // battery on the wrist strap + 2-wire tether to J5
+    rect(Math.min(h.mx(-14), h.mx(14)), h.my(-3), 28 * s, 10 * s, 'r', fillOf('r'));
+    line(cx - 3, h.my(-3), cx - 3, h.my(6), 'r'); line(cx + 3, h.my(-3), cx + 3, h.my(6), 'k', { strokeWidth: 1 });
+    h.fingers.forEach(([fx, L], i) => {
+      const x = h.mx(fx);
+      line(x, h.my(67), x, h.my(isRight ? 75 + L - 6 : 75 + L - 8), 'b', { strokeWidth: 0.9 });   // sensor cable
+      if (!isRight) rect(x - 3, h.my(75 + L - 4), 6, (L - 4) * s, 'g', { strokeWidth: 0.9 });     // splint along the finger
+      else circ(x, h.my(75 + L - 5), 8, 'b', fillOf('b'));                                     // FSR pad at the tip
+      void i;
+    });
+    if (!isRight) text(cx, Y + 210, 'flex sensor in a splint\nalong each finger', 9.5, 'g', 'middle');
+    else { text(h.thumb[0] - 2, h.thumb[1] - 8, 'thumb =\ncontact', 9.5, 'g', 'end'); text(cx, Y + 210, 'FSR pad at each fingertip,\npressed by the thumb', 9.5, 'b', 'middle'); }
+  });
+  text(X + 14, Y + 231, 'battery on the wrist strap, 2-wire tether (red); box on the back of the hand (glove PCB spec)', 9.5, 'r');
+
+  // inside the box: carrier board v1, 2:1 (KiCad coordinates, board 100..160 x 100..156)
+  const bx = X + 282, by = Y + 84, k2 = 2, B = (x, y) => [bx + (x - 100) * k2, by + (y - 100) * k2];
+  text(bx, Y + 56, 'INSIDE THE BOX: carrier v1 60 × 56, 2:1', 11, 'grey');
+  path([B(110, 100), B(150, 100), B(160, 110), B(160, 150), B(146, 156), B(107, 156), B(100, 150), B(100, 110), B(110, 100)], 'k');
+  ['index', 'middle', 'ring', 'pinky'].forEach((f, i) => {
+    const x = 112 + 12 * i;
+    rect(...B(x - 3, 101), 6 * k2, 5 * k2, 'k');
+    text(B(x, 0)[0], B(0, 100)[1] - 3, `J${i + 1}`, 9.5, 'k', 'middle');
+    text(B(x, 0)[0], by - 13, `A${3 - i}`, 9.5, 'b', 'middle');
+    circ(...B(x - 2.5, 115.5), 3, 'k'); circ(...B(x - 2.5, 119.5), 3, 'k'); circ(...B(x - 0.5, 123.5), 5, 'k');
+  });
+  text(B(161, 0)[0] + 2, B(0, 117)[1], 'dividers\nR1–R8,\nC1–C4', 9, 'k');
+  text(B(161, 0)[0] + 2, B(0, 102)[1], 'J1 index …\nJ4 pinky', 9, 'b');
+  rect(...B(117.5, 130.1), 21 * k2, 17.8 * k2, 'b', fillOf('b'));
+  rect(...B(138.5, 136), 3 * k2, 6 * k2, 'k');
+  text(B(128, 0)[0], B(0, 139)[1] + 3, 'XIAO Sense', 9.5, 'b', 'middle');
+  text(B(142, 0)[0] + 2, B(0, 133)[1], 'USB-C', 9, 'k');
+  rect(...B(108, 140), 8 * k2, 4 * k2, 'r'); text(B(105, 0)[0], B(0, 150)[1] + 2, 'J5 battery', 9, 'r');
+  for (const [hx, hy] of [[103, 108], [157, 108], [103, 146], [157, 146]]) circ(...B(hx, hy), 4.4, 'k');
+
+  // L vs R table
+  const tx = X + 446;
+  text(tx, Y + 62, 'L vs R', 11, 'k', 'start', 'bold');
+  const rows = [['', 'LEFT', 'RIGHT'], ['sensors', '4 flex', '4 FSR402'], ['divider', '68 k', '10 k'], ['in', 'R1–R4', 'R5–R8'],
+    ['IMU', 'deadman,', 'off now;'], ['', 'shake ESTOP', 'B: wrist drive'], ['box h', '25.6', '22.6']];
+  rows.forEach((r, i) => r.forEach((c, j) => text(tx + [0, 38, 92][j], Y + 82 + i * 15, c, 10, i === 0 ? 'grey' : 'k')));
+  line(tx, Y + 86, tx + 146, Y + 86, 'grey', { strokeWidth: 0.8, roughness: 0.3 });
 }
 
-// ================================================================= D6. hub + Pi
-function panelD6() {
-  const [X, Y] = at('D6', 0, 0), s = 1.2;
-  rect(X + 26, Y + 66, 85 * s, 56 * s);
-  text(X + 26 + 42 * s, Y + 66 + 28 * s, 'Pi 5', 13, 'k', 'middle');
-  dimH(X + 26, X + 26 + 85 * s, Y + 58, '85', 'k', 10);
-  dimV(X + 18, Y + 66, Y + 66 + 56 * s, '56', 'k', 10);
-  for (let i = 0; i < 2; i++) rect(X + 26 + 85 * s - 4, Y + 70 + i * 20, 10, 15);
-  const hx = X + 200, hy = Y + 90, hs = 2.4;
-  line(X + 26 + 85 * s + 6, Y + 80, hx - 6, hy + 8.9 * hs, 'k', { strokeWidth: 2.5 });
-  text(X + 140, Y + 76, 'USB', 10.5);
-  rect(hx, hy, 21 * hs, 17.8 * hs, 'b');
-  rect(hx - 4, hy + 8.9 * hs - 6, 8, 12, 'k');
-  text(hx + 10.5 * hs, hy + 8.9 * hs + 4, 'XIAO', 11, 'b', 'middle');
-  dimH(hx, hx + 21 * hs, hy - 8, '21', 'k', 10);
-  dimV(hx + 21 * hs + 8, hy, hy + 17.8 * hs, '17.8', 'k', 10, 1);
-  text(X + 26, Y + 160, 'hub = plain XIAO nRF52840 (not Sense)\nudev → /dev/hermes_hub · BLE central', 10.5, 'b');
+// ================================================================= D5. hub + Pi
+function panelD5() {
+  const [X, Y] = at('D5', 0, 0);
+  // placement: Pi + hub off the body, beside the operator (vest photo) [VERIFY]
+  text(X + 14, Y + 58, 'WHERE', 10.5, 'grey');
+  const ox = X + 34, oy = Y + 76;
+  circ(ox, oy, 12); rect(ox - 12, oy + 8, 24, 30); line(ox - 6, oy + 38, ox - 10, oy + 64); line(ox + 6, oy + 38, ox + 10, oy + 64);
+  text(ox, oy + 76, 'operator:\nno cables', 9, 'k', 'middle');
+  line(X + 64, Y + 130, X + 130, Y + 130, 'k', { strokeWidth: 2 });                // bench / chair
+  rect(X + 76, Y + 116, 30, 14, 'k'); rect(X + 108, Y + 120, 9, 7, 'b');
+  arrow(ox + 14, oy + 18, X + 108, Y + 118, 'b', dash);
+  text(X + 62, Y + 146, 'Pi + hub beside the\noperator [VERIFY]', 9, 'k');
+  path([[X + 92, Y + 112], [X + 98, Y + 102], [X + 104, Y + 94]], 'b', dash);
+  text(X + 58, Y + 86, 'Wi-Fi → ROSbots', 9.5, 'b');
+
+  // Pi 5 outline 85 x 56 at 1.1:1, only the ports that matter
+  const s = 1.0, px = X + 150, py = Y + 62, W = 85 * s, H = 56 * s;
+  rect(px, py, W, H); text(px + W / 2 - 8, py + H / 2 + 2, 'Pi 5', 13, 'k', 'middle');
+  dimH(px, px + W, py - 6, '85', 'k', 9.5); dimV(px - 6, py, py + H, '56', 'k', 9.5);
+  for (let i = 0; i < 2; i++) rect(px + W - 4, py + 6 + i * 16, 10, 13, 'k');      // USB-A pairs
+  rect(px + W - 4, py + H - 18, 10, 14, 'k');                                       // Ethernet
+  rect(px + 6, py + H - 4, 10, 6, 'r');                                              // USB-C power
+  text(px, py + H + 14, 'USB-C power [VERIFY supply]', 9, 'r');
+  text(px, py + H + 26, 'Ethernet unused (Wi-Fi)', 9, 'k');
+  // hub on a USB-A port, 2:1
+  const hx = X + 196, hy = Y + 160, hs = 2;
+  path([[px + W + 6, py + 12], [px + W + 20, py + 12], [px + W + 20, hy + 8.9 * hs], [hx + 21 * hs + 4, hy + 8.9 * hs]], 'k', { strokeWidth: 2.2 });
+  rect(hx, hy, 21 * hs, 17.8 * hs, 'b'); rect(hx + 21 * hs - 2, hy + 8.9 * hs - 5, 6, 10, 'k');
+  text(hx + 21 * hs / 2, hy + 8.9 * hs + 3, 'XIAO', 10, 'b', 'middle');
+  text(hx + 21 * hs + 6, hy + 8.9 * hs + 16, 'USB-C', 8.5, 'k');
+  text(hx, hy + 17.8 * hs + 12, 'hub 21 × 17.8', 9, 'b');
+  text(hx, hy + 17.8 * hs + 23, 'antenna: far end [VERIFY]', 8.5, 'b');
+
+  // runs here
+  text(X + 14, Y + 176, 'RUNS HERE', 10.5, 'grey');
+  text(X + 14, Y + 188, 'hub XIAO: hub firmware (BLE\ncentral, 8 links → JSON over USB)', 9.5, 'b');
+  text(X + 14, Y + 212, 'Pi 5 (ROS 2): vest_serial_bridge,\ngesture_pipeline, swarm_control,\nhaptic_vest, optitrack_pose_beacon', 9.5, 'k');
 }
 
 // ================================================================= E. power
@@ -659,7 +758,7 @@ function panelG() {
 function boardMap() {
   for (let x = 0; x <= BOARD.w; x += 100) { line(x, 0, x, BOARD.h, 'grey', { strokeWidth: 0.6, roughness: 0 }); text(x + 3, 14, x / 10, 11, 'grey'); }
   for (let y = 0; y <= BOARD.h; y += 100) { line(0, y, BOARD.w, y, 'grey', { strokeWidth: 0.6, roughness: 0 }); text(3, y - 3, y / 10, 11, 'grey'); }
-  const order = { A: 1, E: 2, G: 3, D1: 4, D2: 5, D3: 6, D4: 7, D5: 8, D6: 9, B: 10, C: 11, F: 12 };
+  const order = { A: 1, E: 2, G: 3, D1: 4, D2: 5, D3: 6, D5: 7, D4: 8, B: 9, C: 10, F: 11 };
   for (const p of PANELS) {
     frame(p, true);
     text(p.x + p.w / 2, p.y + p.h / 2 + 4, `${p.w / 10} × ${p.h / 10} cm`, 26, 'k', 'middle');
@@ -685,7 +784,7 @@ function render() {
   const bg = document.createElementNS(NS, 'rect'); bg.setAttribute('width', BOARD.w); bg.setAttribute('height', BOARD.h); bg.setAttribute('fill', '#fff'); svg.appendChild(bg);
   PANELS.forEach(p => frame(p));
   panelA(); panelB(); panelC(); panelD1(); panelD2(); panelD3();
-  panelGlove('D4', 'glove_left', true); panelGlove('D5', 'glove_right', false); panelD6();
+  panelD4(); panelD5();
   panelE(); panelF(); panelG();
   if (mode === 'panels') {           // one landscape A4-ish page per panel, cut from the same drawing
     const whole = svg; whole.remove();
