@@ -71,14 +71,15 @@ function arrow(x1, y1, x2, y2, c = 'k', e, both) {
   };
   head(x1, y1, x2, y2); if (both) head(x2, y2, x1, y1);
 }
+const DIM = { strokeWidth: 1, disableMultiStroke: true, roughness: 0.4 };
 function dimH(x1, x2, y, label, c = 'k', size = 11) {
-  line(x1, y, x2, y, c, { strokeWidth: 1 });
-  line(x1, y - 5, x1, y + 5, c, { strokeWidth: 1 }); line(x2, y - 5, x2, y + 5, c, { strokeWidth: 1 });
+  line(x1, y, x2, y, c, DIM);
+  line(x1, y - 5, x1, y + 5, c, DIM); line(x2, y - 5, x2, y + 5, c, DIM);
   text((x1 + x2) / 2, y - 3, label, size, c, 'middle');
 }
 function dimV(x, y1, y2, label, c = 'k', size = 11, side = -1) {
-  line(x, y1, x, y2, c, { strokeWidth: 1 });
-  line(x - 5, y1, x + 5, y1, c, { strokeWidth: 1 }); line(x - 5, y2, x + 5, y2, c, { strokeWidth: 1 });
+  line(x, y1, x, y2, c, DIM);
+  line(x - 5, y1, x + 5, y1, c, DIM); line(x - 5, y2, x + 5, y2, c, DIM);
   text(x + side * 4, (y1 + y2) / 2 + 4, label, size, c, side < 0 ? 'end' : 'start');
 }
 function box(x, y, w, h, label, c = 'k', size = 12, e) {
@@ -596,7 +597,7 @@ function panelD4() {
   text(B(161, 0)[0] + 2, B(0, 102)[1], 'J1 index …\nJ4 pinky', 9, 'b');
   rect(...B(117.5, 130.1), 21 * k2, 17.8 * k2, 'b', fillOf('b'));
   rect(...B(138.5, 136), 3 * k2, 6 * k2, 'k');
-  text(B(128, 0)[0], B(0, 139)[1] + 3, 'XIAO Sense', 9.5, 'b', 'middle');
+  text(B(116.5, 0)[0], B(0, 133.5)[1], 'XIAO\nSense', 9.5, 'b', 'end');
   text(B(142, 0)[0] + 2, B(0, 133)[1], 'USB-C', 9, 'k');
   rect(...B(108, 140), 8 * k2, 4 * k2, 'r'); text(B(105, 0)[0], B(0, 150)[1] + 2, 'J5 battery', 9, 'r');
   for (const [hx, hy] of [[103, 108], [157, 108], [103, 146], [157, 146]]) circ(...B(hx, hy), 4.4, 'k');
@@ -613,26 +614,39 @@ function panelD4() {
 // ================================================================= D5. hub + Pi
 function panelD5() {
   const [X, Y] = at('D5', 0, 0);
-  // placement: Pi + hub off the body, beside the operator (vest photo) [VERIFY]
+  // placement: Pi 5 + hub ride on the vest; Pi powered from a USB-C wall supply
   text(X + 14, Y + 58, 'WHERE', 10.5, 'grey');
-  const ox = X + 34, oy = Y + 76;
-  circ(ox, oy, 12); rect(ox - 12, oy + 8, 24, 30); line(ox - 6, oy + 38, ox - 10, oy + 64); line(ox + 6, oy + 38, ox + 10, oy + 64);
-  text(ox, oy + 76, 'operator:\nno cables', 9, 'k', 'middle');
-  line(X + 64, Y + 130, X + 130, Y + 130, 'k', { strokeWidth: 2 });                // bench / chair
-  rect(X + 76, Y + 116, 30, 14, 'k'); rect(X + 108, Y + 120, 9, 7, 'b');
-  arrow(ox + 14, oy + 18, X + 108, Y + 118, 'b', dash);
-  text(X + 62, Y + 146, 'Pi + hub beside the\noperator [VERIFY]', 9, 'k');
-  path([[X + 92, Y + 112], [X + 98, Y + 102], [X + 104, Y + 94]], 'b', dash);
-  text(X + 58, Y + 86, 'Wi-Fi → ROSbots', 9.5, 'b');
+  const ox = X + 46, oy = Y + 70;
+  circ(ox, oy, 18);                                                          // head
+  rect(ox - 16, oy + 10, 32, 38);                                            // vest
+  line(ox - 16, oy + 14, ox - 32, oy + 44); line(ox + 16, oy + 14, ox + 32, oy + 44);   // arms
+  rect(ox - 37, oy + 44, 9, 9); rect(ox + 28, oy + 44, 9, 9);              // gloves
+  line(ox - 7, oy + 48, ox - 10, oy + 68); line(ox + 7, oy + 48, ox + 10, oy + 68);     // legs
+  circ(ox - 24, oy + 28, 6); circ(ox + 24, oy + 28, 6);                      // sleeve pods
+  rect(ox - 12, oy + 18, 16, 11, 'k'); rect(ox + 5, oy + 20, 7, 7, 'b');     // Pi + hub on the vest
+  arrow(ox - 31, oy + 44, ox + 4, oy + 26, 'b', dash);                       // left glove -> hub
+  arrow(ox + 31, oy + 44, ox + 12, oy + 28, 'b', dash);                      // right glove -> hub
+  arrow(ox + 24, oy + 22, ox + 12, oy + 22, 'b', dash);                      // sleeve pod -> hub
+  const rbx = X + 90, rby = Y + 74;                                         // a ROSbot
+  rect(rbx, rby, 22, 13); circ(rbx + 5, rby + 15, 6); circ(rbx + 17, rby + 15, 6);
+  arrow(ox + 2, oy + 16, rbx - 3, rby + 6, 'b', dash);
+  text(rbx + 11, rby + 32, 'ROSbots', 9, 'k', 'middle');
+  text(X + 66, Y + 74, 'Wi-Fi', 9, 'b');
+  const wx = X + 86, wy = Y + 126;                                          // wall socket
+  rect(wx, wy, 12, 14, 'r'); line(wx + 4, wy + 4, wx + 4, wy + 8, 'r'); line(wx + 8, wy + 4, wx + 8, wy + 8, 'r');
+  path([[ox - 4, oy + 29], [ox - 4, oy + 56], [wx - 2, wy + 7]], 'r');
+  text(X + 14, Y + 152, 'Pi 5 + hub sit on the vest', 9.5, 'k');
+  text(X + 14, Y + 163, 'BLE: gloves + pods → hub', 9.5, 'b');
+  text(wx + 16, wy + 6, 'USB-C wall\nsupply', 9, 'r');
 
   // Pi 5 outline 85 x 56 at 1.1:1, only the ports that matter
   const s = 1.0, px = X + 150, py = Y + 62, W = 85 * s, H = 56 * s;
   rect(px, py, W, H); text(px + W / 2 - 8, py + H / 2 + 2, 'Pi 5', 13, 'k', 'middle');
-  dimH(px, px + W, py - 6, '85', 'k', 9.5); dimV(px - 6, py, py + H, '56', 'k', 9.5);
+  dimH(px, px + W, py - 6, '85', 'k', 9.5); dimV(px - 16, py, py + H, '56', 'k', 9.5);
   for (let i = 0; i < 2; i++) rect(px + W - 4, py + 6 + i * 16, 10, 13, 'k');      // USB-A pairs
   rect(px + W - 4, py + H - 18, 10, 14, 'k');                                       // Ethernet
   rect(px + 6, py + H - 4, 10, 6, 'r');                                              // USB-C power
-  text(px, py + H + 14, 'USB-C power [VERIFY supply]', 9, 'r');
+  text(px, py + H + 14, 'USB-C power in (wall supply)', 9, 'r');
   text(px, py + H + 26, 'Ethernet unused (Wi-Fi)', 9, 'k');
   // hub on a USB-A port, 2:1
   const hx = X + 196, hy = Y + 160, hs = 2;
@@ -641,7 +655,6 @@ function panelD5() {
   text(hx + 21 * hs / 2, hy + 8.9 * hs + 3, 'XIAO', 10, 'b', 'middle');
   text(hx + 21 * hs + 6, hy + 8.9 * hs + 16, 'USB-C', 8.5, 'k');
   text(hx, hy + 17.8 * hs + 12, 'hub 21 × 17.8', 9, 'b');
-  text(hx, hy + 17.8 * hs + 23, 'antenna: far end [VERIFY]', 8.5, 'b');
 
   // runs here
   text(X + 14, Y + 176, 'RUNS HERE', 10.5, 'grey');

@@ -66,9 +66,14 @@ code {{ font-size: 9.5pt; background: #f3f3f3; padding: 0 2px; }} li {{ margin: 
 (DIST / 'drawing_guide.html').write_text(guide)
 
 
-def chrome(*args):
-    subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--no-pdf-header-footer', '--hide-scrollbars',
-                    '--virtual-time-budget=8000', *args], check=True, capture_output=True)
+def chrome(*args, tries=3):
+    # headless Chrome on macOS sometimes exits with status 2 for no reason; a retry fixes it
+    for i in range(tries):
+        r = subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--no-pdf-header-footer', '--hide-scrollbars',
+                            '--virtual-time-budget=8000', *args], capture_output=True)
+        if r.returncode == 0:
+            return
+    r.check_returncode()
 
 
 for src, pdf in (('hermes_board.html', 'hermes_board.pdf'), ('board_map.html', 'board_map.pdf'),

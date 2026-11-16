@@ -152,14 +152,14 @@ Views are third-angle: TOP above FRONT, SIDE to the right of FRONT.
 
 ## Panel D5: Hub + Pi 5 (top-left (140, 37), 30 × 24 cm), medium
 
-1. **WHERE** (left, from (1.4, 5.8)): a small stick operator ("operator: no cables"), and a bench line with the Pi box and the blue hub on it.
-   A dashed blue BLE arrow goes from the operator to the hub, and dashed Wi-Fi arcs from the Pi labelled "Wi-Fi → ROSbots".
-   Note: "Pi + hub beside the operator [VERIFY]". The deck's vest photo shows the Pi on the chair beside the vest, and with BLE nothing on the body is wired.
+1. **WHERE** (left, from (1.4, 5.8)): a small stick operator wearing the vest, with the **Pi 5 + hub sitting on the vest** (black box + small blue hub), a glove on each hand and a pod on each sleeve.
+   <span class="b">Blue dashed BLE arrows from both gloves and a sleeve pod to the hub</span>; a <span class="b">blue dashed Wi-Fi arrow from the Pi to a small ROSbot</span>;
+   a <span class="r">red cable from the Pi to a wall socket: "USB-C wall supply"</span>. Notes: "Pi 5 + hub sit on the vest", "BLE: gloves + pods → hub".
 2. **Pi 5 outline 1:1** at (15, 6.2), 8.5 × 5.6 cm. Dimensions 85 and 56. Draw only the ports that matter:
    two USB-A pairs and Ethernet on the right short edge, and <span class="r">USB-C power on the bottom edge, near the left</span>.
-   Notes: <span class="r">"USB-C power [VERIFY supply]"</span> and "Ethernet unused (Wi-Fi)".
+   Notes: <span class="r">"USB-C power in (wall supply)"</span> and "Ethernet unused (Wi-Fi)".
 3. <span class="b">Hub XIAO 2:1</span> (4.2 × 3.6 cm) at (19.6, 16), with its USB-C on the right end. A thick black USB cable runs from the Pi's top USB-A port down to it.
-   Notes: "hub 21 × 17.8", "antenna: far end [VERIFY]".
+   Note: "hub 21 × 17.8".
 4. **RUNS HERE** (bottom left, from (1.4, 17.6)): <span class="b">"hub XIAO: hub firmware (BLE central, 8 links → JSON over USB)"</span> and
    "Pi 5 (ROS 2): vest_serial_bridge, gesture_pipeline, swarm_control, haptic_vest, optitrack_pose_beacon".
 
@@ -261,11 +261,10 @@ Footnotes on the board: <span class="g">magnets: 6 pod + 6 dock + 6 vest = 18</s
 | BLE rates and payloads, serial protocol, pod labels, charge currents | `haptic-vest/docs/SOFTWARE_PLAN.md` |
 | BOM and Spanish context | `haptic-vest/shopping_list.csv`, `H.E.R.M.E.S Project/hardware/pcb/BOM.md` |
 | Glove enclosures 65 × 61 × 25.6 / 22.6 | `H.E.R.M.E.S Project/hardware/enclosure/pod_v1_{left,right}_*.stl`, `SPEC.md` |
-| Raspberry Pi 5 85 × 56 | confirmed by the user |
 | Glove layout: box on the back of the hand, battery on the wrist strap with a 2-wire tether, hand 80 × 75 | `H.E.R.M.E.S Project/docs/superpowers/specs/2026-09-30-glove-pcb-design.md` |
 | Carrier board outline, J1–J5, dividers, XIAO position | `hardware/pcb/glove_carrier/glove_carrier.kicad_pcb`, `DESIGN_TOUR.md`, `BOM.md` |
-| Splints, fingertip FSRs, thumb as the contact | the user's brief (not in the repo) |
-| Pi + hub off the body | deck photo `docs/talk/img/vest.jpg` (Pi beside the vest) + no wires on the operator with BLE; [VERIFY] |
+| Flex sensors in splints along the fingers; FSRs at the fingertips, one per finger, with the thumb as the contact | HERMES paper `Paper_New_HERMES/.../main.tex` (glove section, l. 110: "four FSR sensors (h--k), one per finger, with the thumb acting as the active contact point"; four flex sensors on the left glove) and the glove photo `H.E.R.M.E.S Project/docs/talk/img/gloves.jpg` |
+| Pi 5 + hub on the vest; Pi powered by a USB-C wall supply; Pi 5 85 × 56 | confirmed by the user |
 | Dock underside: pin boards, M2 screws, USB board + ledge | `haptic-vest/src/cad_dock.py` slots, `deskbar2.py` (`SCREW_V`, `USB_BOARDS`, `LEDGE_*`, `WALL_IN`) |
 | Glove pin map, IMU on/off | `haptic-vest/firmware/glove_left`, `glove_right` |
 | ROS nodes, topics, rates | `H.E.R.M.E.S Project/ros_version/src/hermes_control/hermes_control/*_node.py` parameter defaults |
@@ -281,5 +280,5 @@ The Spanish one-word names are translations, not taken from a source.
 - Adafruit 6050 USB-C board dimensions are provisional (dock stays out of the print pack until it is measured with calipers).
 - The shopping list orders 1 XIAO nRF52840 Sense; two gloves need 2.
 - Left-glove lid height (25.6) was set by the GY-521. With the Sense's onboard IMU, a lower lid may be possible.
-- Pi + hub placement (beside the operator), the Pi's power supply, the hub's antenna end, and the dock's daisy-chain wire route.
+- The dock's daisy-chain wire route.
 - Not yet measured or flashed: pod, dock and vest-mount parts, all BLE firmware (compiled, never flashed), and the motor PWM frequency.
