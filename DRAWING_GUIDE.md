@@ -1,0 +1,254 @@
+# H.E.R.M.E.S whiteboard: drawing guide
+
+How to copy `dist/hermes_board.pdf` onto a **120 cm wide × 170 cm tall** whiteboard (portrait), panel by panel.
+The board map (`dist/board_map.pdf`) shows where each panel goes. `dist/board_panels.pdf` has every panel on its own page,
+so you can hold the page for the panel you are drawing.
+
+**What it shows:** the latest system. A wireless pod vest and a desk dock, XIAO nRF52840 BLE gloves and hub, and the ROS 2 side unchanged.
+Anything designed but not built yet is labelled that way on the board.
+
+## Marker colours (fixed)
+
+| Marker | Means | Examples |
+|---|---|---|
+| <span class="k">black</span> | structure | outlines, boxes, frames, ROS nodes, dimensions |
+| <span class="b">blue</span> | data / radio | BLE links, USB serial, ROS topics, firmware, XIAO parts |
+| <span class="r">red</span> | power | USB-C 5 V, pogo pins, brass pads, batteries, charge path |
+| <span class="g">green</span> | magnets / mechanical | magnets, key rib / groove, snap-on notes, sewing holes |
+
+Grey text in the PDF (view names, scale notes, small notes) is written in black on the board, smaller.
+
+## Conventions
+
+- **Positions** are in cm from the **top-left corner of the panel**, written (across, down).
+- **Scale "2:1"** means 1 real mm is drawn as 2 mm on the board. The pod is 52 mm long, so at 2:1 it is drawn 10.4 cm long.
+- Dimensions on the board are **real sizes in mm**, never board sizes.
+- Every view is a simplified outline taken from the STL files (`tools/extract_views.py`), with at most ~20 straight lines and circles.
+  Corners that are rounded or chamfered by less than 1 mm are drawn square.
+- **[VERIFY]** marks a number that is not measured or not in the sources. Write it on the board too.
+- Hatching (diagonal lines) inside a part in the PDF means the part is filled with that colour. On the board, 3–4 quick diagonal strokes are enough.
+
+## Order of work (about 2–3 hours in total)
+
+1. With a long ruler, draw all panel frames in black, using the board map. Write each panel letter and title in its top-left corner.
+2. Fill the panels in order A → G. Each panel below lists its steps in drawing order: structure (black) first, then data (blue), power (red), mechanics (green), then the labels.
+
+---
+
+## Panel A: System overview (top-left (0, 0), 120 × 32 cm)
+
+1. **Legend**, top row from (40, 3): four short thick strokes, one in each colour, each followed by what it means.
+2. **Operator** (black), around (15, 16): head Ø3.6 at (15, 9), spine down to (15, 24), two legs, two arms ending at the gloves.
+   Vest = rectangle 9 × 11 cm on the torso, top-left at (10.5, 12).
+3. **Pods**: six small hexagons on the vest, numbered 1–6. Along the bottom edge of the panel, write the key: 1 L sleeve, 2 R sleeve,
+   3 L shoulder, 4 R shoulder, 5 L torso, 6 R torso.
+4. **Gloves**: one small square at each hand. Label them "L glove · 4 flex + IMU" and "R glove · 4 FSR".
+5. **Hub and Pi** (black): hub box 6 × 4 cm at (42.5, 13.5) labelled "hub XIAO", joined by a short thick USB cable to the Pi box 15 × 10 cm at (52, 10.5) labelled "Raspberry Pi 5 · ROS 2 nodes".
+6. **Robots** (black): three boxes 8 × 5 cm with two wheels each, at (82, 15), (92.5, 15) and (103, 15), labelled ROSbot r1, r2, r3.
+   OptiTrack: three small camera boxes at (101, 7).
+7. **Desk dock** (black, with green hexagons): a sloped bar 17 cm long at (30, 26) with six small green hexagons. Caption: "desk dock: 6 pockets · pods snap in by magnet".
+8. **Blue (dashed arrows):**
+   - from each glove to the hub: "gloves: BLE 50 Hz · L 48 B · R 9 B";
+   - from the hub to the vest: "BLE to each pod: motor level ≤ 20 Hz on change + 10 Hz keepalive · 2 B";
+   - above the hub: "BLE central (8 links)";
+   - under the Pi: "USB serial 921 600 baud · ↑ hermes.hub.v1 JSON lines · ↓ V1,<seq>,m1..m6 @ 20 Hz";
+   - a double arrow from the Pi to the robots: "ROS 2 over Wi-Fi", "/hermes/swarm_intent 10 Hz →", "← /hermes/robot_state_beacon";
+   - from the cameras to the robots: "NatNet poses → pose beacons". Under the robots: "each robot: own agent node → /cmd_vel 20 Hz".
+9. **Red:** an arrow into the dock's right end: "USB-C 5 V".
+10. **Status** (black), bottom right from (72, 26), three lines:
+    BUILT: ROS 2 nodes · ROSbots · OptiTrack · v1 glove carrier boards ·
+    DESIGNED, NOT BUILT: pods · dock · vest mounts ·
+    COMPILED, NEVER FLASHED: hub / pod / glove BLE firmware.
+
+## Panel B: What is part of what (top-left (0, 32), 60 × 33 cm)
+
+1. Write "H.E.R.M.E.S system" centred at (30, 6) and underline it.
+2. **Left tree** from (2, 8.8). Indent about 2 cm per level, one line every 1.45 cm, with grey/black connector lines (└ / ├):
+   - **Operator wearables**
+     - **Left glove** → enclosure v1 (base + lid) · carrier PCB v1, 60 × 56 → <span class="b">XIAO nRF52840 Sense (IMU on)</span> · 4 flex sensors + 4 × 68 kΩ · <span class="r">LiPo 500 mAh</span>
+     - **Right glove**: same carrier → XIAO Sense (IMU off) · 4 FSR402 + 4 × 10 kΩ
+     - **Vest** → 6 vest mounts → 6 pods → **Pod** → case: base + snap lid · backpack PCB: MOSFET · diode · 100 kΩ · <span class="b">XIAO nRF52840 · coin motor</span> · <span class="r">LiPo 150 mAh</span> · <span class="g">underside: magnet · 2 brass pads · key groove</span>
+3. **Right tree** from (33, 8.8):
+   - **Desk dock** → desk bar (one print) · 6 pockets → pin board 30 × 30 → <span class="r">2 pogo pins</span>; <span class="g">magnet under 0.5 skin</span>; <span class="g">key rib</span> · <span class="r">USB-C board (Adafruit 6050)</span>
+   - **Base station** → Raspberry Pi 5 (ROS 2) · <span class="b">hub: XIAO nRF52840 on USB</span>
+   - **Swarm** → 3 ROSbots r1–r3 (agent each) · <span class="b">OptiTrack (NatNet poses)</span>
+
+## Panel C: Component list (top-left (60, 32), 60 × 33 cm)
+
+Two tables side by side, at (1.2, 6) and (30.6, 6). Columns: part · qty · role · español. One row every 1.5 cm. Group headers in capitals.
+
+| Group | Part | Qty | Role | Español |
+|---|---|---|---|---|
+| POD (per pod / ×6) | XIAO nRF52840 | 1 / 6 | BLE · charger | micro |
+| | SI2302 MOSFET | 1 / 6 | motor switch | transistor |
+| | 1N4148W diode | 1 / 6 | flyback | diodo |
+| | 100 kΩ 0805 | 1 / 6 | gate pull-down | resistencia |
+| | coin motor 10 × 3 | 1 / 6 | vibration | motor |
+| | LiPo 150 mAh | 1 / 6 | power | batería |
+| | magnet 10 × 3 | 1 / 6 | holds pod | imán |
+| | brass pad Ø4 | 2 / 12 | charge contact | latón |
+| | backpack PCB | 1 / 6 | carries parts | circuito |
+| | case base + lid | 1 / 6 | shell | carcasa |
+| VEST | vest mount | 6 | pod cradle | soporte |
+| | magnet 10 × 3 | 6 | holds pod | imán |
+| | velcro strap 20 mm | 6 | to the vest | velcro |
+| DOCK | desk bar print | 1 | holds 6 pods | base |
+| | pogo pin Mill-Max 7911 | 12 | spring contact | contacto |
+| | pin board 30 × 30 | 6 | holds 2 pins | circuito |
+| | magnet 10 × 3 | 6 | pulls pod in | imán |
+| | USB-C board Adafruit 6050 | 1 | 5 V in | conector |
+| | M2 × 6 screw | 14 | board mounts | tornillo |
+| GLOVES (per glove / ×2) | XIAO nRF52840 Sense [VERIFY] | 1 / 2 | BLE · IMU | micro |
+| | carrier PCB v1 | 1 / 2 | sockets | circuito |
+| | flex (L) / FSR402 (R) | 4 / 8 | finger input | sensor |
+| | 68 kΩ (L) / 10 kΩ (R) | 4 / 8 | divider | resistencia |
+| | LiPo 500 mAh | 1 / 2 | power | batería |
+| BASE STATION | Raspberry Pi 5 | 1 | ROS 2 | ordenador |
+| | XIAO nRF52840 hub | 1 | BLE central | micro |
+
+Footnotes on the board: <span class="g">magnets: 6 pod + 6 dock + 6 vest = 18</span>; "[VERIFY] shopping list orders 1 Sense; 2 gloves need 2".
+
+## Panel D1: Pod (top-left (0, 65), 60 × 48 cm), full detail
+
+Views are third-angle: TOP above FRONT, SIDE to the right of FRONT.
+
+1. **TOP 2:1** (black), at (4, 8.6), 10.4 × 6.4 cm: a long hexagon. Points at the left and right ends, and flat top and bottom edges 6 cm long.
+   Dimensions: 52 across the top, 32 on the left. Write "→ +x key side" at the right end.
+2. **FRONT 2:1** at (4, 18.4), 10.4 × 3.8 cm: rectangle with the top corners chamfered (top edge 7.5 cm long, chamfer starts 1 cm below the top).
+   Dashed line at z 8 ("split z 8": base below, lid above). Dimension 19 on the left.
+3. **SIDE 2:1** at (20.4, 18.4), 6.4 × 3.8 cm: same shape, top edge 4 cm. Dimension 32 below.
+4. **BOTTOM 2:1** (dock side) at (29, 8.6): the same hexagon as TOP, then inside it:
+   <span class="g">magnet Ø10.2 (2 cm circle, hatched) in the centre</span>; <span class="r">two pads Ø4 (8 mm circles) 4.4 cm apart (22 mm real), "− pad" left, "+5 V pad" right</span>;
+   <span class="g">key groove = thin rectangle 2.6 × 0.5 cm near the right tip</span>. Dimension "22" between the pads in red.
+5. **ISO SKETCH** around (47, 16): hexagonal prism about 10 cm long, with the top chamfered inward (smaller hexagon on top). Draw the near edges only.
+6. **SECTION through pads + magnet (y = 0), 3.4:1** at (29, 26.2), about 17.7 × 6.5 cm: base tray and lid outlines (black), then inside, from the bottom up:
+   <span class="g">magnet</span> in the floor centre, <span class="r">LiPo</span> (hatched red, 10.9 cm wide), backpack PCB (thin black), <span class="b">XIAO</span> (hatched blue, left part),
+   <span class="g">motor</span> (hatched green, 3.4 cm, right, against the ceiling). Label each one on the right. Caption: "USB-C toward −x · motor beside the XIAO".
+7. **EXPLODED STACK 2.6:1** from (4, 31) down to (4, 45). Draw these layers spaced about 1 cm apart. Widths are at 2.6:1, centred on the 13.5 cm base.
+   Label each layer on its right with its height range (z, mm above the bottom):
+
+   | Layer (top → bottom) | Colour | Width | z (mm) |
+   |---|---|---|---|
+   | lid (snap fit): chamfered cap outline | black | 13.5 cm | 8–19 |
+   | motor 10 × 3 (in lid ring) | green | 2.6 cm, right of centre | 13.7–16.7 |
+   | XIAO nRF52840 | blue | 5.5 cm, left of centre | 10.5–12.1 |
+   | backpack PCB 30 × 20 | black | 7.8 cm | 8.8–10.4 |
+   | LiPo 150 mAh 32 × 18 × 4.5 | red | 8.3 cm | 3.9–8.4 |
+   | foam tape 0.3 | black | 8.3 cm | 3.6–3.9 |
+   | base: floor 3.6 + lip, with the magnet (green) and 2 pads (red) underneath | black | 13.5 cm | 0–3.6 |
+
+   Caption in green: "magnet + 2 brass pads sit in pockets under the floor".
+
+## Panel D2: Desk dock (top-left (60, 65), 60 × 48 cm), full detail
+
+1. **TOP FACE 1:1** (looking square onto the 20° slope) at (3.6, 7), 22.1 × 6.9 cm: rounded-corner bar with **six gem pockets** (hexagons) side by side.
+   Dimension "221 along the face". Note: "pockets 37 apart · pocket wall 0.5 from the pod".
+2. **FRONT 1:1** at (3.6, 20.5), 22.8 × 3.4 cm: long low rectangle, top corners chamfered. Dimensions 228 and 34.2.
+3. **SIDE 1.3:1** at (30.4, 19.7), 9.4 × 4.4 cm: wedge. Low front (left, 1.5 cm), slope up to the tall back (right). Write "20°" at the slope, dimension 72.
+4. **ISO SKETCH** around (45, 14): the side wedge extruded 228 long; six <span class="g">green hexagons</span> on the slope.
+   <span class="r">Red note: "hollow underside · USB-C in the back wall slot 12 × 6.5 (Adafruit 6050 on a ledge) [VERIFY board dims]"</span>.
+5. **POCKET SECTION 4.5:1**, how snap-on charging works, at (4, 30), 27 × 8.1 cm. Draw in this order:
+   1. black: the dock top skin around the pocket (as in the PDF), with the pocket floor and the two pogo holes;
+   2. black: pin board, a thin rectangle 13.5 cm wide just under the skin (30 × 30 board at 6.79 below the floor), "pin board 30 × 30 (M2 screws)";
+   3. <span class="r">red: two pogo pins, vertical bars from the pin board up to the floor, 9.9 cm apart (±11 mm), with the brass pads on top of them</span>;
+   4. <span class="g">green: dock magnet under the floor (0.5 skin) and pod magnet just above the floor, both hatched; key rib at the right</span>;
+   5. black dashed: the pod's bottom sitting in the pocket;
+   6. callouts: "pod magnet", "brass pad", "key rib in groove" above. "pogo pin · tip 0.7 proud · stroke 1.40 · ~0.65 pressed" on the right, "dock magnet under 0.5 skin" below.
+   7. Under it, in green: "magnets ≈ 870 gf vs 2 pins ≈ 187 gf → 4.6 × [VERIFY: estimate, N35 assumed]" and "key rib stops a backwards pod (no other reverse-polarity protection)".
+6. **POCKET PLAN 2.5:1** at (42, 29.6), 16 × 11 cm: gem outline (black); <span class="g">magnet Ø10.2 hatched in the centre and the key rib bar on the right</span>;
+   <span class="r">two pogo holes at ±11 (left/right of the magnet)</span>; two black M2 pilot dots above and below the magnet.
+
+## Panel D3: Vest mount ×6 (top-left (0, 113), 30 × 20 cm), medium
+
+1. **TOP 1.3:1** at (3, 6.8), 9.9 × 5.7 cm: octagon (corners cut 45°), the gem pocket hexagon inside it, two strap slots (thin rectangles) at the ends,
+   <span class="g">magnet Ø10.2 in the centre</span>, 6 small sewing holes along the long edges. Dimensions 76 and 44.
+2. **FRONT** below it: a thin base plate with a raised wall on top. Dimension 8.1.
+3. **ISO** at (20, 9.5): flat octagon plate with a lower octagon ring on top.
+4. Green notes: "magnet Ø10.2 flush · key rib · thumb notch · 6 sewing holes · 2 strap slots (20 mm)".
+
+## Panels D4 and D5: Left glove and Right glove (top-left (30, 113) and (60, 113), 30 × 20 cm each), medium
+
+Both enclosures are the same, apart from the height.
+
+1. **TOP 0.95:1** at (2.6, 7), 7.7 × 5.8 cm: a square box with a strap flange sticking out on each side (a plus-sign shape).
+   Dimensions "81 with flanges" and 61. Dashed rectangle inside: "carrier 60 × 56".
+2. **FRONT** below it: box on a wider flange plate. Height **25.6** (left) or **22.6** (right).
+3. **ISO** at (16, 10): a box, plus a flat plate under it that sticks out at both ends.
+4. Blue notes:
+   - left: "XIAO nRF52840 Sense · onboard IMU: deadman, shake ESTOP · 4 flex · index→A3 … pinky→A0 · lid sized for old GY-521 [VERIFY lower lid]";
+   - right: "XIAO nRF52840 Sense · IMU off (current) · 4 FSR · index→A3 … pinky→A0 · option B: IMU on".
+
+## Panel D6: Hub + Pi 5 (top-left (90, 113), 30 × 20 cm), medium
+
+1. Black rectangle 10.2 × 6.7 cm at (2.6, 6.6): "Pi 5". Dimensions **85 [VERIFY]** and 56 (the Pi's size is not in the project files). Two small USB ports on the right edge.
+2. A thick USB cable to a <span class="b">blue XIAO rectangle 5 × 4.3 cm</span> at (20, 9) with its USB-C on the left. Dimensions 21 and 17.8.
+3. Blue notes: "hub = plain XIAO nRF52840 (not Sense) · udev → /dev/hermes_hub · BLE central".
+
+## Panel E: Power and charging (top-left (0, 133), 32 × 37 cm)
+
+1. **Dock → pod charging**, red boxes 8.8 × 3.2 cm, three per row, following a snake from (1.8, 6.4):
+   USB-C 5 V → Adafruit 6050 (5.1 k CC) → 6 pin boards (daisy-chain) ↓ 2 pogo pins per pocket ← … → pod brass pads (+5 V at +x)
+   ↓ wires in floor grooves → XIAO VBUS → charger 50 mA → LiPo 150 mAh.
+2. **Pod motor driver** (schematic) from (5, 21):
+   - red BAT+ rail along the top;
+   - black motor circle "M" hanging from it, with the 1N4148W diode beside it in parallel (triangle pointing up, bar at the top = stripe toward BAT+);
+   - below them, MOSFET box "Q1" (D at the top, S at the bottom to the ground symbol);
+   - <span class="b">blue "D0 PWM" line into G</span>, and a 100 k zig-zag from the gate line to ground.
+   Notes: "diode 1N4148W across the motor, stripe → BAT+", "Q1 = SI2302 MOSFET, source to GND, gate held low by 100 k".
+3. Red line at the bottom: "glove: LiPo 500 mAh → XIAO Sense, charged on its own USB-C at 100 mA".
+
+## Panel F: Software map (top-left (32, 133), 40 × 37 cm)
+
+1. <span class="b">Blue firmware boxes</span> at x 1.4: glove_left (48 B @ 50 Hz), glove_right (9 B @ 50 Hz), pod ×6 (2 B, stop after 300 ms).
+   Arrows to the blue "hub fw (BLE central)" box at (15, 4.8). Grey note: "firmware: Arduino + Bluefruit, shared lib hv_common".
+2. Black ROS node boxes in a column at x 15, 12 × 3.4 cm, joined by blue arrows going down, with the topic written to the right of each arrow (x 27.6):
+   vest_serial_bridge_node (blue double arrow up to the hub: "USB 921 600") → `/hermes/raw_input` → gesture_pipeline_node → `/hermes/command_packets` →
+   swarm_control_node → `/hermes/swarm_intent 10 Hz` → robot agent ×3 (ROSbots) → `/cmd_vel 20 Hz`.
+3. haptic_vest_node at (1.4, 25.6): an arrow from swarm_control_node into it, then a dashed blue line from it back up to the bridge, labelled "vest_serial_tx 20 Hz".
+4. optitrack_pose_beacon_node at (1.4, 31.4), "→ /hermes/robot_state_beacon".
+5. Protocol note (blue), at (1.4, 20): "hub → Pi: hermes.hub.v1, .status, .devices (1/s) · Pi → hub: V1,<seq>,m1..m6". Bottom right: "ROS 2 side: unchanged".
+
+## Panel G: Gesture vocabulary (top-left (72, 133), 48 × 37 cm)
+
+Three columns: mode (x 1.2) · CURRENT (default) (x 8.6, black) · <span class="b">OPTION B, in development (x 28.6, blue)</span>. Draw a light line between rows.
+
+| Left posture → mode | Current (right FSR) | Option B, in development |
+|---|---|---|
+| OPEN → DRIVE | left hand tilt drives · M tap soft stop, M 2× resume · palm-up + R tap yaw, R hold precision | I hold + right wrist tilt drives (30° full, 4° dead zone) · M hold + roll: speed 0–4 · R hold + roll: aggression 1–4 · P tap yaw |
+| POINT → SELECT | I/M/R/P tap: group A–D, 2×: E–G · P 2× confirm group · group edit: tap r1–r4, hold r5 / r6 | I/M/R/P tap: toggle r1–r4 · I/M hold: toggle r5 / r6 · R hold: all ⇄ none |
+| FIST → FORMATION | tap: LINE, COLUMN, WEDGE, CIRCLE · 2×: ECHELON_L, ECHELON_R, GRID, DIAMOND · hold: I orient, M apply, R spacing | tap: LINE, COLUMN, WEDGE, CIRCLE · I hold + roll: menu of 9 · M: spacing 0.70–1.60 m · R: heading 45°/step · P hold: confirm |
+| TWO → BEHAVIOR | tap: PATROL, FOLLOW_PATH, HOLD_ANCHOR, RETURN_HOME · I/M 2×: PATROL_PERIMETER, FOLLOW_PATH_LOOP · R/P hold: FOLLOW_ME, DISPERSE_SCAN | tap: PATROL, FOLLOW_PATH, HOLD_ANCHOR, RETURN_HOME · I hold + roll: menu of 8 · P hold: confirm |
+| THREE → PARAMS | I/M tap: speed −/+ · R/P tap: spacing −/+ · R/P 2×: aggression −/+ · hold = min / max | removed: speed, spacing and aggression become dials |
+| SAFETY (any mode) | left palm-up = deadman off · left shake = ESTOP | palm-up gate · knock = PAUSE · two-hand shake = ESTOP · P hold 600 ms = confirm / RESUME |
+
+Footer: "I M R P = right index / middle / ring / pinky FSR · 2× = double tap · roll = right wrist (B) · B: taxonomy:=b".
+
+---
+
+## Where the numbers come from
+
+| Topic | Source |
+|---|---|
+| Pod, dock and vest-mount outlines and sizes | `haptic-vest/stl/*.stl` (current build, newer than the last geometry commit), sliced and projected by `tools/extract_views.py` |
+| Pod z stack, pad / magnet / key positions | `haptic-vest/src/cad3.py` constants (`FLOOR`, `BAT_*`, `BP_*`, `XIAO_*`, `MOTOR_*`, `CONTACT_X`, `KEY_X`) |
+| Pogo, magnet skin, pin board depth, pocket pitch, slope | `haptic-vest/src/cad_dock.py`, `deskbar2.py`, `CLAUDE.md` |
+| Charge and motor paths, magnet vs pins estimate | `haptic-vest/CLAUDE.md` |
+| BLE rates and payloads, serial protocol, pod labels, charge currents | `haptic-vest/docs/SOFTWARE_PLAN.md` |
+| BOM and Spanish context | `haptic-vest/shopping_list.csv`, `H.E.R.M.E.S Project/hardware/pcb/BOM.md` |
+| Glove enclosures 65 × 61 × 25.6 / 22.6 | `H.E.R.M.E.S Project/hardware/enclosure/pod_v1_{left,right}_*.stl`, `SPEC.md` |
+| Glove pin map, IMU on/off | `haptic-vest/firmware/glove_left`, `glove_right` |
+| ROS nodes, topics, rates | `H.E.R.M.E.S Project/ros_version/src/hermes_control/hermes_control/*_node.py` parameter defaults |
+| 3 ROSbots (r1–r3) | `ros_version/.../config/optitrack_version1_lab.yaml` (`robot_ids: [r1, r2, r3]`) |
+| Current gestures | `taxonomy-review:docs/taxonomy/current_mapping.md` (generated from `gestures/matcher.py`) + `README.md` safety section |
+| Option B | `taxonomy-b:docs/taxonomy/05_option_b_design.md` §5.0–5.2 |
+
+The Spanish one-word names are translations, not taken from a source.
+
+## [VERIFY] list
+
+- Magnet pull vs pogo pins (4.6×) is an estimate (N35 assumed, not measured).
+- Adafruit 6050 USB-C board dimensions are provisional (dock stays out of the print pack until it is measured with calipers).
+- Raspberry Pi 5 size (85 × 56) is not in the project files.
+- The shopping list orders 1 XIAO nRF52840 Sense; two gloves need 2.
+- Left-glove lid height (25.6) was set by the GY-521. With the Sense's onboard IMU, a lower lid may be possible.
+- Not yet measured or flashed: pod, dock and vest-mount parts, all BLE firmware (compiled, never flashed), and the motor PWM frequency.
