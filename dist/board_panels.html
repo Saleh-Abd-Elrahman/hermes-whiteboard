@@ -297,15 +297,19 @@ function panelB() {
     [3, 'LiPo 500 mAh', 'r'],
     [1, 'Right glove: same carrier'],
     [2, 'XIAO Sense (IMU off) · 4 FSR402 + 4 × 10 kΩ'],
-    [1, 'Vest → 6 vest mounts → 6 pods'],
-    [2, 'Pod'],
-    [3, 'case: base + snap lid'],
-    [3, 'backpack PCB: MOSFET · diode · 100 kΩ'],
-    [3, 'XIAO nRF52840 · coin motor', 'b'],
-    [3, 'LiPo 150 mAh', 'r'],
-    [3, 'underside: magnet · 2 brass pads · key groove', 'g'],
+    [1, 'Vest'],
+    [2, '6 vest mounts → 6 pods (right)'],
+    [2, 'Raspberry Pi 5 (ROS 2 nodes)'],
+    [2, 'hub: XIAO nRF52840 on Pi USB', 'b'],
+    [2, 'USB-C power bank 5 V 5 A', 'r'],
   ], 14.5, 20, 12.5);
   tree(X + 330, Y + 88, [
+    [0, 'Pod (×6, in the vest mounts)'],
+    [1, 'case: base + snap lid'],
+    [1, 'backpack PCB: MOSFET · diode · 100 kΩ'],
+    [1, 'XIAO nRF52840 · coin motor', 'b'],
+    [1, 'LiPo 150 mAh', 'r'],
+    [1, 'underside: magnet, 2 pads, key groove', 'g'],
     [0, 'Desk dock'],
     [1, 'desk bar (one print)'],
     [1, '6 pockets'],
@@ -314,9 +318,6 @@ function panelB() {
     [2, 'magnet under 0.5 skin', 'g'],
     [2, 'key rib', 'g'],
     [1, 'USB-C board (Adafruit 6050)', 'r'],
-    [0, 'Base station'],
-    [1, 'Raspberry Pi 5 (ROS 2)'],
-    [1, 'hub: XIAO nRF52840 on USB', 'b'],
     [0, 'Swarm'],
     [1, '3 ROSbots r1–r3 (agent each)'],
     [1, 'OptiTrack (NatNet poses)', 'b'],
@@ -336,8 +337,7 @@ function table(x, y, cols, rows, size = 11.5, rh = 15) {
 }
 function panelC() {
   const [X, Y] = at('C', 0, 0);
-  const cols = [['part', 114], ['qty', 40], ['role', 80], ['español', 56]];
-  table(X + 12, Y + 60, cols, [
+  table(X + 12, Y + 60, [['part', 104], ['qty', 34], ['role', 74], ['español', 80]], [
     'POD (per pod / ×6)',
     ['XIAO nRF52840', '1 / 6', 'BLE · charger', 'micro'],
     ['SI2302 MOSFET', '1 / 6', 'motor switch', 'transistor'],
@@ -353,8 +353,11 @@ function panelC() {
     ['vest mount', '6', 'pod cradle', 'soporte'],
     ['magnet 10 × 3', '6', 'holds pod', 'imán'],
     ['velcro strap 20', '6', 'to the vest', 'velcro'],
-  ], 11.5, 15);
-  table(X + 306, Y + 60, cols, [
+    ['Raspberry Pi 5', '1', 'ROS 2 nodes', 'ordenador'],
+    ['XIAO nRF52840 hub', '1', 'BLE central', 'micro'],
+    ['power bank 5 V 5 A', '1', 'Pi power, PD', 'batería externa'],
+  ], 11, 15);
+  table(X + 308, Y + 60, [['part', 110], ['qty', 36], ['role', 80], ['español', 62]], [
     'DOCK',
     ['desk bar print', '1', 'holds 6 pods', 'base'],
     ['pogo pin 7911', '12', 'spring contact', 'contacto'],
@@ -368,12 +371,10 @@ function panelC() {
     ['flex (L) / FSR402 (R)', '4 / 8', 'finger input', 'sensor'],
     ['68 k (L) / 10 k (R)', '4 / 8', 'divider', 'resistencia'],
     ['LiPo 500 mAh', '1 / 2', 'power', 'batería'],
-    'BASE STATION',
-    ['Raspberry Pi 5', '1', 'ROS 2', 'ordenador'],
-    ['XIAO nRF52840 hub', '1', 'BLE central', 'micro'],
-  ], 11.5, 15);
-  text(X + 306, Y + 320, '[VERIFY] shopping list orders 1 Sense; 2 gloves need 2', 10.5, 'grey');
-  text(X + 12, Y + 320, 'magnets: 6 pod + 6 dock + 6 vest = 18', 10.5, 'g');
+  ], 11, 15);
+  text(X + 308, Y + 290, 'power bank: USB-C PD, 5 V 5 A, powers the Pi 5', 10.5, 'r');
+  text(X + 308, Y + 305, 'magnets: 6 pod + 6 dock + 6 vest = 18', 10.5, 'g');
+  text(X + 308, Y + 320, '[VERIFY] shopping list orders 1 Sense; 2 gloves need 2', 10.5, 'grey');
 }
 
 // ================================================================= D1. pod
@@ -710,8 +711,8 @@ function panelE() {
   arrow(...mid(6, 'r'), ...mid(7, 'l'), 'r'); arrow(...mid(7, 'r'), ...mid(8, 'l'), 'r');
 
   // pod motor driver
-  const sx = X + 50, y0m = Y + 222, xm = sx + 70, xd = sx + 115;
-  text(X + 18, y0m - 12, 'POD MOTOR DRIVER', 11, 'grey');
+  const sx = X + 50, y0m = Y + 218, xm = sx + 70, xd = sx + 115;
+  text(X + 18, y0m - 9, 'POD MOTOR DRIVER', 11, 'grey');
   text(X + 18, y0m + 4, 'BAT+', 11, 'r'); line(sx, y0m, xd, y0m, 'r');
   line(xm, y0m, xm, y0m + 14); circ(xm, y0m + 29, 30); text(xm, y0m + 33, 'M', 12, 'k', 'middle');
   line(xm, y0m + 44, xm, y0m + 62);
@@ -728,6 +729,7 @@ function panelE() {
   text(sx - 2, y0m + 106, '100 k', 10, 'k', 'end');
   text(xd + 16, y0m + 14, wrap('diode 1N4148W across the motor, stripe → BAT+', 22), 10);
   text(xd + 16, y0m + 76, wrap('Q1 = SI2302 MOSFET, source to GND, gate held low by 100 k', 22), 10);
+  text(X + 18, Y + 350, 'Pi: power bank 5 V 5 A → Pi 5 USB-C · Pi USB → hub', 10.5, 'r');
   text(X + 18, Y + 362, 'glove: LiPo 500 mAh → XIAO Sense, charged on its own USB-C at 100 mA', 10.5, 'r');
 }
 

@@ -64,13 +64,13 @@ Grey text in the PDF (view names, scale notes, small notes) is written in black 
 1. **Dock → pod charging**, red boxes 8.8 × 3.2 cm, three per row, following a snake from (1.8, 6.4):
    USB-C 5 V → Adafruit 6050 (5.1 k CC) → 6 pin boards (daisy-chain) ↓ 2 pogo pins per pocket ← … → pod brass pads (+5 V at +x)
    ↓ wires in floor grooves → XIAO VBUS → charger 50 mA → LiPo 150 mAh.
-2. **Pod motor driver** (schematic) from (5, 21):
+2. **Pod motor driver** (schematic) from (5, 21.8):
    - red BAT+ rail along the top;
    - black motor circle "M" hanging from it, with the 1N4148W diode beside it in parallel (triangle pointing up, bar at the top = stripe toward BAT+);
    - below them, MOSFET box "Q1" (D at the top, S at the bottom to the ground symbol);
    - <span class="b">blue "D0 PWM" line into G</span>, and a 100 k zig-zag from the gate line to ground.
    Notes: "diode 1N4148W across the motor, stripe → BAT+", "Q1 = SI2302 MOSFET, source to GND, gate held low by 100 k".
-3. Red line at the bottom: "glove: LiPo 500 mAh → XIAO Sense, charged on its own USB-C at 100 mA".
+3. Two red lines at the bottom: "Pi: power bank 5 V 5 A → Pi 5 USB-C · Pi USB → hub" and "glove: LiPo 500 mAh → XIAO Sense, charged on its own USB-C at 100 mA".
 
 ## Panel G: Gesture vocabulary (top-left (122, 0), 48 × 37 cm)
 
@@ -193,15 +193,17 @@ Views are third-angle: TOP above FRONT, SIDE to the right of FRONT.
    - **Operator wearables**
      - **Left glove** → enclosure v1 (base + lid) · carrier PCB v1, 60 × 56 → <span class="b">XIAO nRF52840 Sense (IMU on)</span> · 4 flex sensors + 4 × 68 kΩ · <span class="r">LiPo 500 mAh</span>
      - **Right glove**: same carrier → XIAO Sense (IMU off) · 4 FSR402 + 4 × 10 kΩ
-     - **Vest** → 6 vest mounts → 6 pods → **Pod** → case: base + snap lid · backpack PCB: MOSFET · diode · 100 kΩ · <span class="b">XIAO nRF52840 · coin motor</span> · <span class="r">LiPo 150 mAh</span> · <span class="g">underside: magnet · 2 brass pads · key groove</span>
+     - **Vest** → 6 vest mounts → 6 pods (see the right tree) · Raspberry Pi 5 (ROS 2 nodes) · <span class="b">hub: XIAO nRF52840 on Pi USB</span> · <span class="r">USB-C power bank 5 V 5 A</span>
 3. **Right tree** from (33, 8.8):
+   - **Pod (×6, in the vest mounts)** → case: base + snap lid · backpack PCB: MOSFET · diode · 100 kΩ · <span class="b">XIAO nRF52840 · coin motor</span> · <span class="r">LiPo 150 mAh</span> · <span class="g">underside: magnet, 2 pads, key groove</span>
    - **Desk dock** → desk bar (one print) · 6 pockets → pin board 30 × 30 → <span class="r">2 pogo pins</span>; <span class="g">magnet under 0.5 skin</span>; <span class="g">key rib</span> · <span class="r">USB-C board (Adafruit 6050)</span>
-   - **Base station** → Raspberry Pi 5 (ROS 2) · <span class="b">hub: XIAO nRF52840 on USB</span>
    - **Swarm** → 3 ROSbots r1–r3 (agent each) · <span class="b">OptiTrack (NatNet poses)</span>
+
+   There is no "Base station" any more: the Pi and the hub ride on the vest.
 
 ## Panel C: Component list (top-left (60, 85), 60 × 35 cm)
 
-Two tables side by side, at (1.2, 6) and (30.6, 6). Columns: part · qty · role · español. One row every 1.5 cm. Group headers in capitals.
+Two tables side by side, at (1.2, 6) (POD + VEST) and (30.8, 6) (DOCK + GLOVES). Columns: part · qty · role · español. One row every 1.5 cm. Group headers in capitals.
 
 | Group | Part | Qty | Role | Español |
 |---|---|---|---|---|
@@ -218,6 +220,9 @@ Two tables side by side, at (1.2, 6) and (30.6, 6). Columns: part · qty · role
 | VEST | vest mount | 6 | pod cradle | soporte |
 | | magnet 10 × 3 | 6 | holds pod | imán |
 | | velcro strap 20 mm | 6 | to the vest | velcro |
+| | Raspberry Pi 5 | 1 | ROS 2 nodes | ordenador |
+| | XIAO nRF52840 hub | 1 | BLE central | micro |
+| | power bank, USB-C PD 5 V 5 A | 1 | Pi power | batería externa |
 | DOCK | desk bar print | 1 | holds 6 pods | base |
 | | pogo pin Mill-Max 7911 | 12 | spring contact | contacto |
 | | pin board 30 × 30 | 6 | holds 2 pins | circuito |
@@ -229,10 +234,8 @@ Two tables side by side, at (1.2, 6) and (30.6, 6). Columns: part · qty · role
 | | flex (L) / FSR402 (R) | 4 / 8 | finger input | sensor |
 | | 68 kΩ (L) / 10 kΩ (R) | 4 / 8 | divider | resistencia |
 | | LiPo 500 mAh | 1 / 2 | power | batería |
-| BASE STATION | Raspberry Pi 5 | 1 | ROS 2 | ordenador |
-| | XIAO nRF52840 hub | 1 | BLE central | micro |
 
-Footnotes on the board: <span class="g">magnets: 6 pod + 6 dock + 6 vest = 18</span>; "[VERIFY] shopping list orders 1 Sense; 2 gloves need 2".
+Footnotes under the right table: <span class="r">"power bank: USB-C PD, 5 V 5 A, powers the Pi 5"</span>; <span class="g">magnets: 6 pod + 6 dock + 6 vest = 18</span>; "[VERIFY] shopping list orders 1 Sense; 2 gloves need 2".
 
 ## Panel F: Software map (top-left (120, 85), 50 × 35 cm)
 
