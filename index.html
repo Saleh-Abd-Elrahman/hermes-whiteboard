@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HERMES whiteboard</title>
+<style>
+  :root { --ink: #1e1e1e; --blue: #1864ab; --red: #c92a2a; --green: #2b8a3e; --grey: #6b7280; --bg: #fff; }
+  @media (prefers-color-scheme: dark) { :root { --ink: #e8e8e8; --grey: #9aa0a6; --bg: #16181b; --blue: #74b3f0; } }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 -apple-system, "Helvetica Neue", Arial, sans-serif; }
+  main { max-width: 960px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { margin: 0 0 4px; font-size: 28px; }
+  p.sub { margin: 0 0 24px; color: var(--grey); }
+  a.board img { width: 100%; height: auto; border: 1px solid #ccc; border-radius: 6px; background: #fff; }
+  ul { padding-left: 20px; }
+  li { margin: 6px 0; }
+  a { color: var(--blue); }
+  .key span { font-weight: 600; margin-right: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>H.E.R.M.E.S whiteboard</h1>
+  <p class="sub">A 170 × 120 cm whiteboard write-up of the system: wireless pod vest, desk dock, BLE gloves and hub, ROS 2 swarm.</p>
+  <a class="board" href="dist/hermes_board.html"><img src="dist/hermes_board.png" alt="The whole whiteboard, twelve panels A to G"></a>
+  <ul>
+    <li><a href="dist/hermes_board.html">Interactive board</a> (hand-drawn style, zoom with the browser) · <a href="dist/hermes_board.pdf">PDF</a></li>
+    <li><a href="dist/board_map.html">Board map</a>: panels to scale, sizes and positions in cm · <a href="dist/board_map.pdf">PDF</a></li>
+    <li><a href="dist/board_panels.pdf">One page per panel</a> (PDF)</li>
+    <li><a href="dist/drawing_guide.html">Drawing guide</a>: what to draw, in which order and colour · <a href="dist/DRAWING_GUIDE.pdf">PDF</a></li>
+  </ul>
+  <p class="key">Marker code:
+    <span>black = structure</span><span style="color:var(--blue)">blue = data / radio</span><span style="color:var(--red)">red = power</span><span style="color:var(--green)">green = magnets / mechanical</span>
+  </p>
+</main>
+</body>
+</html>
