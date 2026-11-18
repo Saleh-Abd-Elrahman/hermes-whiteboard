@@ -3,6 +3,8 @@
 A hand-copyable whiteboard write-up of the latest H.E.R.M.E.S system: the wireless pod vest, the desk dock, XIAO nRF52840 BLE gloves and hub,
 and the ROS 2 side unchanged. It is laid out for a **170 × 120 cm landscape** whiteboard.
 
+**Live site:** https://saleh-abd-elrahman.github.io/hermes-whiteboard/ (GitHub Pages, built from `main` at the repo root; `index.html` is the landing page).
+
 ## Open these
 
 | File | What |
